@@ -1,0 +1,6 @@
+# Created by .ignore support plugin (hsz.mobi)
+mysql/target/
+target/
+web/target/
+.idea
+lib/
