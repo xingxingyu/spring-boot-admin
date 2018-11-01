@@ -1,0 +1,32 @@
+{
+  "groups": [{
+    "name": "securityconfig",
+    "type": "com.test.web.config.SecuritySettings",
+    "sourceType": "com.test.web.config.SecuritySettings"
+  }],
+  "properties": [
+    {
+      "name": "securityconfig.deniedpage",
+      "type": "java.lang.String",
+      "sourceType": "com.test.web.config.SecuritySettings",
+      "defaultValue": "/deny"
+    },
+    {
+      "name": "securityconfig.logoutsuccssurl",
+      "type": "java.lang.String",
+      "sourceType": "com.test.web.config.SecuritySettings",
+      "defaultValue": "admin/logout"
+    },
+    {
+      "name": "securityconfig.permitall",
+      "type": "java.lang.String",
+      "sourceType": "com.test.web.config.SecuritySettings",
+      "defaultValue": "/api"
+    },
+    {
+      "name": "securityconfig.urlroles",
+      "type": "java.lang.String",
+      "sourceType": "com.test.web.config.SecuritySettings"
+    }
+  ]
+}

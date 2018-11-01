@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="fragments/layout">
+<head>
+    <title>明细数据</title>
+    <meta charset="UTF-8"/>
+    <link th:href="@{/scripts/pagination/pagination.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/scripts/artDialog/default.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/scripts/My97DatePicker/skin/WdatePicker.css}" rel="stylesheet" type="text/css" />
+
+    <script th:src="@{/scripts/pagination/jquery.pagination.js}"></script>
+    <script th:src="@{/scripts/jquery.smartselect-1.1.min.js}"></script>
+    <script th:src="@{/scripts/artDialog/artDialog.js}" />
+    <script th:src="@{/scripts/My97DatePicker/WdatePicker.js}"></script>
+    <script th:src="@{/scripts/report/list.js}" charset="GB2312"></script>
+
+
+</head>
+<body>
+<div class="locationLine" layout:fragment="prompt">
+    当前位置：首页 &gt; <em >用户管理</em>
+</div>
+<div class="statisticBox w-782"  layout:fragment="content">
+    <form id="queryForm" method="get">
+        <input type="hidden" name="editrole" id="editrole" th:value="${editrole}"/>
+        <input type="hidden" name="deleterole" id="deleterole" th:value="${deleterole}"/>
+    <div class="radiusGrayBox782">
+        <div class="radiusGrayTop782"></div>
+        <div class="radiusGrayMid782">
+            <div class="dataSearchBox forUserRadius">
+                <ul>
+                    <li>
+                        <label class="preInpTxt f-left">开始</label>
+                        <input type="text" class="inp-list f-left w-200" value="" id="start" name="start" onfocus="WdatePicker()"/>
+                    </li>
+                    <li>
+                        <label class="preInpTxt f-left">结束</label>
+                        <input type="text" class="inp-list f-left w-200" value="" id="end" name="end" onfocus="WdatePicker()"/>
+                    </li>
+                    <li>
+                        <label class="preInpTxt f-left">科室</label>
+                        <input type="text" class="inp-list f-left w-200" value="" id="department" name="department" />
+                    </li>
+                    <li>
+                        <label class="preInpTxt f-left">垃圾</label>
+                        <input type="text" class="inp-list f-left w-200" value="" id="category_name" name="category_name" />
+                    </li>
+                    <li>
+                    <a href="javascript:void(0)" class="blueBtn-62X30 f-right" id="searchBtn">查询</a>
+                </li>
+                    <li>
+                        <a href="javascript:void(0)" class="blueBtn-62X30 f-right" id="exportExcel">导出EXCEL</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </form>
+
+    <div class="dataDetailList mt-12 table-tb">
+        <table class="dataListTab">
+            <thead><!--页眉-->
+            <tr>
+                <th>ID</th>
+                <th>物料号</th>
+                <th>物料名称</th>
+                <th>生产批号</th>
+                <th>净重</th>
+                <th>皮重</th>
+                <th>预置皮重</th>
+                <th>上传时间</th>
+                <th>打印序列号</th>
+                <th>电子秤IP</th>
+                <th>科室</th>
+                <th>操作员</th>
+                <th>是否复核</th>
+                <th>复核差异</th>
+                <th>复核结果</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyContent">
+            </tbody>
+        </table>
+        <div class="tableFootLine">
+            <div class="pagebarList pagination"/>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

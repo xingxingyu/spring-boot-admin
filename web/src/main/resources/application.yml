@@ -1,0 +1,39 @@
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  datasource:
+      url: jdbc:mysql://localhost:3306/garbage?characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&rewriteBatchedStatements=true&allowMultiQueries=true
+      username: root
+      password: 123456
+      initial-size: 2
+      max-active: 200
+      maxIdle: 10
+      maxWait: 20000
+      minIdle: 5
+      testWhileIdle: true
+      testOnBorrow: true
+      validationQuery: select 1
+      removeAbandoned: true
+      logAbandoned: true
+      removeAbandonedTimeout: 86400
+      jdbcInterceptors: org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer
+  jpa:
+    database: MYSQL
+#    show-sql: true
+  ## Hibernate ddl auto (validate|create|create-drop|update)
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+
+securityconfig:
+  logoutsuccssurl: /
+  permitall: /rest/**,/bbs**
+  deniedpage: /deny

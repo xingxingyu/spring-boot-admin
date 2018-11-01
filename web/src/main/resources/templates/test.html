@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+
+</head>
+<body>
+<table style="background-color: #6A6AFF;">
+    <tr style="text-align: center"><td style="text-align: center">第一行第1列</td><td style="text-align: center">第一行第2列</td></tr>
+    <tr><td>第二行第1列</td><td>第二行第2列</td></tr>
+</table>
+<table>
+    <tr><td>第一行第1列</td><td>第一行第2列</td></tr>
+    <tr><td>第二行第1列</td><td>第二行第2列</td></tr>
+</table>
+<select onchange="alertSelect()" id="se" style="width: 100%;height: 50%;border: 2px solid;background-color: #0e9aef;border-color: #5eaf05;font-size: large;"><option value="男">男</option><option value="女">女</option></select>
+<script>
+    document.getElementsByTagName("select")[0].value="女";
+    function alertSelect(){
+
+        var sel = document.getElementById("se");
+        var s = sel.options[sel.selectedIndex].value;
+        alert(s);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<script th:src="@{/scripts/echarts.min.js}" charset="UTF-8"></script>
+<!--
+<script th:src="@{/scripts/reportCollect/list.js}" charset="UTF-8"></script>
+-->
+<div class="statisticBox w-782" layout:fragment="content">
+    <!-- 引入 echarts.js -->
+    <div id="main" style="height:400px;"></div>
+    <script type="text/javascript">
+
+        var dataFormatter = formatter;
+        var myChart = echarts.init(document.getElementById('main'));
+        var dataMap = {};
+
+        dataMap.infectious = dataFormatter(
+            //感染性
+            getNetByCategory("感染性废物")
+        );
+        //
+        dataMap.pathologic = dataFormatter(
+            //病理性
+            getNetByCategory("病理性废物")
+        );
+
+        dataMap.injured = dataFormatter(
+            //损伤性
+            getNetByCategory("损伤性废物")
+        );
+
+        dataMap.drug = dataFormatter(
+            //药物性
+            getNetByCategory("药物性废物")
+        );
+
+        dataMap.chemical = dataFormatter(
+            //化学性
+            getNetByCategory("化学性废物")
+        );
+
+        dataMap.else = dataFormatter(
+            //max : 3200,
+            getNetByCategory("其它废物")
+        );
+
+        option = {
+            baseOption: {
+                timeline: {
+                    // y: 0,
+                    axisType: 'category',
+                    // realtime: false,
+                    // loop: false,
+                    autoPlay: true,
+                    // currentIndex: 2,
+                    playInterval: 1000,
+                    // controlStyle: {
+                    //     position: 'left'
+                    // },
+                    data: [
+
+
+                    ],
+                    label: {
+                        formatter: function (s) {
+                            return (new Date(s)).getFullYear();
+                        }
+                    }
+                },
+                title: {
+                    subtext: '数据来自无锡妇幼保健院'
+                },
+                tooltip: {},
+                legend: {
+                    x: 'right',
+                    data: ['感染性废物', '病理性废物', '损伤性废物', '药物性废物', '化学性废物', '其他废物'],
+                    selected: {
+                        '感染性废物': false, '病理性废物': false, '损伤性废物': false
+                    }
+                },
+                calculable: true,
+                grid: {
+                    top: 80,
+                    bottom: 100,
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow',
+                            label: {
+                                show: true,
+                                formatter: function (params) {
+                                    return params.value.replace('\n', '');
+                                }
+                            }
+                        }
+                    }
+                },
+                xAxis: [
+                    {
+                        'type': 'category',
+                        'axisLabel': {'interval': 0},
+                        'data': array2(),
+                        splitLine: {show: false}
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '净重（KG）'
+                    }
+                ],
+                series: [
+                    {name: '感染性废物', type: 'bar'},
+                    {name: '病理性废物', type: 'bar'},
+                    {name: '损伤性废物', type: 'bar'},
+                    {name: '药物性废物', type: 'bar'},
+                    {name: '化学性废物', type: 'bar'},
+                    {name: '其他废物', type: 'bar'},
+                    {
+                        name: '垃圾净重占比',
+                        type: 'pie',
+                        center: ['75%', '35%'],
+                        radius: '28%',
+                        z: 100
+                    }
+
+                ]
+            },
+            options: [
+                {
+                    title: {text: '医疗垃圾净重指数'},
+                    series: [
+                        {data: dataMap.infectious['2011']},
+                        {data: dataMap.pathologic['2011']},
+                        {data: dataMap.injured['2011']},
+                        {data: dataMap.drug['2011']},
+                        {data: dataMap.chemical['2011']},
+                        {data: dataMap.else['2011']},
+                        {
+                            data: [
+                                {name: '感染性废物', value: dataMap.infectious['2011sum']},
+                                {name: '病理性废物', value: dataMap.pathologic['2011sum']},
+                                {name: '损伤性废物', value: dataMap.injured['2011sum']},
+                                {name: '药物性废物', value: dataMap.drug['2011sum']},
+                                {name: '化学性废物', value: dataMap.chemical['2011sum']},
+                                {name: '其他废物', value: dataMap.else['2011sum']}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+        myChart.setOption(option);
+
+    </script>
+</div>
+

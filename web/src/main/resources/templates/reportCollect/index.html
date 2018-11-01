@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="fragments/layout">
+<head>
+    <title>汇总数据</title>
+    <meta charset="UTF-8"/>
+    <link th:href="@{/scripts/pagination/pagination.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/scripts/artDialog/default.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/scripts/My97DatePicker/skin/WdatePicker.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/assets/css/plugins/datepicker/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/assets/css/plugins/datepicker/datetimepicker.min.css}" rel="stylesheet"/>
+    <script th:src="@{/assets/js/plugins/datepicker/bootstrap.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/datepicker/bootstrap-datetimepicker.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/datepicker/bootstrap-datetimepicker.zh-CN.js}"></script>
+
+    <script th:src="@{/scripts/pagination/jquery.pagination.js}"></script>
+    <script th:src="@{/scripts/jquery.smartselect-1.1.min.js}"></script>
+    <script th:src="@{/scripts/artDialog/artDialog.js}"/>
+    <script th:src="@{/scripts/My97DatePicker/WdatePicker.js}"></script>
+    <script th:src="@{/scripts/reportCollect/list.js}" charset="GB2312"></script>
+
+<style>
+    label{font-weight: 100}
+    h4, h5, h6, h4, h5, h6 {margin-top: 0px;margin-bottom: 0px;}
+</style>
+
+</head>
+<body>
+<div class="locationLine" layout:fragment="prompt">
+    当前位置：首页 &gt; <em>汇总数据</em>
+</div>
+<div class="statisticBox w-782" layout:fragment="content">
+    <form id="queryForm" method="get">
+        <input type="hidden" name="editrole" id="editrole" th:value="${editrole}"/>
+        <input type="hidden" name="deleterole" id="deleterole" th:value="${deleterole}"/>
+        <div class="radiusGrayBox782">
+            <div class="radiusGrayTop782"></div>
+            <div class="radiusGrayMid782">
+                <div class="dataSearchBox forUserRadius">
+                    <ul>
+                        <li>
+                            <label class="preInpTxt f-left">开始</label>
+                            <input type="text" class="inp-list f-left w-200" value="" id="start" name="start"
+                                   />
+                        </li>
+
+                        <li>
+                            <label class="preInpTxt f-left">结束</label>
+                            <input type="text" class="inp-list f-left w-200" value="" id="end" name="end"/>
+                        </li>
+
+                        <li>
+                            <a href="javascript:void(0)" class="blueBtn-62X30 f-right" id="searchBtn">查询</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" class="blueBtn-62X30 f-right" id="exportExcel">导出</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" class="blueBtn-62X30 f-right" id="view">视图</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="dataDetailList mt-12 table-tb">
+        <table class="dataListTab">
+            <thead><!--页眉-->
+            <tr>
+                <th>科室</th>
+                <th>垃圾编号</th>
+                <th>垃圾名称</th>
+                <th>净重</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyContent">
+            </tbody>
+        </table>
+        <div class="tableFootLine">
+            <div class="pagebarList pagination"/>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>
+</body>
+</html>
