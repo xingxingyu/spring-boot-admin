@@ -4,3 +4,10 @@ target/
 web/target/
 .idea
 lib/
+log.log.2017-08-06
+spring-boot-admin.iml
+out/artifacts/dataextact_jar/dataextact.jar
+out/artifacts/fybjy/fybjy.war
+out/artifacts/spring_boot_security_jar/spring-boot-security.jar
+out/artifacts/wuxi_fybjy/wuxi-fybjy.war
+out/artifacts/wuxi_jar/web.jar
