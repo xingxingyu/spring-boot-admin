@@ -178,7 +178,7 @@ public class ReportController {
         electronicDataForReportQo.setEnd(request.getParameter("end"));
         electronicDataForReportQo.setCategoryName(request.getParameter("categoryName"));
         electronicDataForReportQo.setDepartment(request.getParameter("department"));
-        String[] head = new String[]{"ID", "物料号", "物料名称", "生产批号", "净重", "皮重", "预置皮重", "上传时间", "打印序列号", "电子秤IP", "科室", "操作员", "是否复核", "复核差异", "复核结果"};
+        String[] head = new String[]{"病区","垃圾类型","重量","操作员","称重时间","护士","运输人员","运输时间","抽检人","抽检时间","装车人","装车时间"};
 
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
