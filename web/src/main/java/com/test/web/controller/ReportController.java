@@ -205,35 +205,29 @@ public class ReportController {
             for (short j = 0; j < head.length + 1; j++) {//列索引
                 cell = row.createCell(j);
                 if (j == 0) {
-                    cell.setCellValue(list.get(i).getId());
+                    cell.setCellValue(list.get(i).getDepartment());
                 } else if (j == 1) {
-                    cell.setCellValue(list.get(i).getCategoryId() == null ? "" : list.get(i).getCategoryId());
-                } else if (j == 2) {
                     cell.setCellValue(list.get(i).getCategoryName() == null ? "" : list.get(i).getCategoryName());
-                } else if (j == 3) {
-                    cell.setCellValue(list.get(i).getBachId() == null ? "" : list.get(i).getBachId());
-                } else if (j == 4) {
+                } else if (j == 2) {
                     cell.setCellValue(list.get(i).getNetWeight() == null ? 0 : list.get(i).getNetWeight());
-                } else if (j == 5) {
-                    cell.setCellValue(list.get(i).getTare() == null ? 0 : list.get(i).getTare());
-                } else if (j == 6) {
-                    cell.setCellValue(list.get(i).getPreTare() == null ? 0 : list.get(i).getPreTare());
-                } else if (j == 7) {
-                    cell.setCellValue(list.get(i).getUp_Date() == null ? format.format(new Date()) : format.format(list.get(i).getUp_Date()));
-                } else if (j == 8) {
-                    cell.setCellValue(list.get(i).getSn() == null ? -1L : list.get(i).getSn());
-                } else if (j == 9) {
-                    cell.setCellValue(list.get(i).getIp() == null ? "" : list.get(i).getIp());
-                } else if (j == 10) {
-                    cell.setCellValue(list.get(i).getDepartment() == null ? "" : list.get(i).getDepartment());
-                } else if (j == 11) {
+                } else if (j == 3) {
                     cell.setCellValue(list.get(i).getOperator() == null ? "" : list.get(i).getOperator());
-                } else if (j == 12) {
-                    cell.setCellValue(list.get(i).getIsCheck() == null ? -1 : list.get(i).getIsCheck());
-                } else if (j == 13) {
-                    cell.setCellValue(list.get(i).getCheckDif() == null ? -1 : list.get(i).getCheckDif());
-                } else if (j == 14) {
-                    cell.setCellValue(list.get(i).getCheckRs() == null ? -1 : list.get(i).getCheckRs());
+                } else if (j == 4) {
+                    cell.setCellValue(list.get(i).getUp_Date() == null ? format.format(new Date()) : format.format(list.get(i).getUp_Date()));
+                } else if (j == 5) {
+                    cell.setCellValue(list.get(i).getNurseName() == null ? "" : list.get(i).getNurseName());
+                } else if (j == 6) {
+                    cell.setCellValue(list.get(i).getTransName() == null ? "" : list.get(i).getTransName());
+                } else if (j == 7) {
+                    cell.setCellValue(list.get(i).getMtime2() == null ? format.format(new Date()) : format.format(list.get(i).getMtime2()));
+                } else if (j == 8) {
+                    cell.setCellValue(list.get(i).getScheckp() == null ? "" : list.get(i).getScheckp());
+                } else if (j == 9) {
+                    cell.setCellValue(list.get(i).getSchecpt() == null ? format.format(new Date()) : format.format(list.get(i).getSchecpt()));
+                } else if (j == 10) {
+                    cell.setCellValue(list.get(i).getTransitp() == null ? "" : list.get(i).getTransitp());
+                } else if (j == 11) {
+                    cell.setCellValue(list.get(i).getTransitpt() == null ? format.format(new Date()) : format.format(list.get(i).getTransitpt()));
                 }
             }
         }
@@ -254,7 +248,7 @@ public class ReportController {
         try {
             out.close();
         } catch (IOException e) {
-         logger.error(e.getMessage());
+         logger.error("服务器内部错误",e);
         }
         return filebyte;
     }

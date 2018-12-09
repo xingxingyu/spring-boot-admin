@@ -20,7 +20,7 @@ public class OperatorImpl implements OperatorDao {
     @Override
     public Map<Integer, String> getDepartmentMap() {
         Connection conn = MDBManager.getInstance().getConn();
-        String sql = "select distinct department_Id,department from operator";
+        String sql = "SELECT DISTINCT department_id,name FROM  DEPARTMENT";
         Map<Integer, String> deptMap = new HashMap<>();
         PreparedStatement psql;
         try {

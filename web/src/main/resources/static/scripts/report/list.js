@@ -82,19 +82,19 @@ function fillData(data) {
     var $list = $('#tbodyContent').empty();
     $.each(data, function (k, v) {
         var html = "";
-        html += '<tr> ' +
-            '<td>' + (v.id == null ? '' : v.id) + '</td>' +
-            '<td>' + (v.categoryId == null ? '' : v.categoryId) + '</td>' +
+        html += '<tr>' +
+            '<td>' + (v.department == null ? '' : v.department) + '</td>' +
             '<td>' + (v.categoryName == null ? '' : v.categoryName) + '</td>' +
             '<td>' + (v.netWeight == null ? '' : v.netWeight) + '</td>' +
-            '<td>' + (v.up_Date == null ? '' : getSmpFormatDateByLong(v.up_Date, true)) + '</td>' +
-            '<td>' + (v.sn == null ? '' : v.sn) + '</td>' +
-            '<td>' + (v.ip == null ? '' : v.ip) + '</td>' +
-            '<td>' + (v.department == null ? '' : v.department) + '</td>' +
             '<td>' + (v.operator == null ? '' : v.operator) + '</td>' +
-            '<td>' + (v.isCheck == null ? '' : v.isCheck) + '</td>' +
-            '<td>' + (v.checkDif == null ? '' : v.checkDif.toFixed(2)) + '</td>' +
-            '<td>' + (v.checkRs == null ? '' : v.checkRs) + '</td>';
+            '<td>' + (v.up_Date == null ? '' : getSmpFormatDateByLong(v.up_Date, true)) + '</td>' +
+            '<td>' + (v.nurseName == null ? '' : v.nurseName) + '</td>' +
+            '<td>' + (v.transName == null ? '' : v.transName) + '</td>' +
+            '<td>' + (v.mtime2 == null ? '' : getSmpFormatDateByLong(v.mtime2, true)) + '</td>' +
+            '<td>' + (v.scheckp == null ? '' : v.scheckp) + '</td>' +
+            '<td>' + (v.schecpt == null ? '' : getSmpFormatDateByLong(v.schecpt, true)) + '</td>' +
+            '<td>' + (v.transitp == null ? '' : v.transitp) + '</td>' +
+            '<td>' + (v.transitpt == null ? '' : getSmpFormatDateByLong(v.transitpt, true)) + '</td>';
         $list.append($(html));
 
     });

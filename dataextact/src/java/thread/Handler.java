@@ -94,8 +94,9 @@ public class Handler implements Runnable {
             f.setCategoryName(data[14]);
         } else if (head.indexOf("REE") != -1) {
             f.setIp(ip);
+
             f_garbageDao.insertGarbage(f);
-            logger.info("入库完成：1条记录");
+            logger.info("入库完成：1条记录"+f.toString());
         }
 
     }
@@ -103,4 +104,5 @@ public class Handler implements Runnable {
     public   double convertDouble(double d) {
         return new BigDecimal(d).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
+
 }

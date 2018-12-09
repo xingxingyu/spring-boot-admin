@@ -10,7 +10,7 @@ Configuration:
       - name: log.level.xjj
         value: trace
       - name: log.path
-        value: /opt/logs
+        value: ../logs
       - name: project.name
         value: my-spring-boot
 
