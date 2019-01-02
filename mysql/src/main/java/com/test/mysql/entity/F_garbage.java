@@ -55,6 +55,7 @@ public class F_garbage implements java.io.Serializable {
     private String transitp;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date transitpt;
+    private Double mweight;
 
     public F_garbage() {
     }

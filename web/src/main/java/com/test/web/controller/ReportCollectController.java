@@ -117,20 +117,18 @@ public class ReportCollectController {
                 cal.add(Calendar.DATE, -30);
                 start = cal.getTime();
             } else {
-                logger.info(electronicDataForReportQo.getStart() + "开始..........................");
                 start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
             }
 
             if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
                 end = new Date();
             } else {
-                logger.info(electronicDataForReportQo.getEnd() + "结束..........................");
                 end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
             }
             list = reportCollectRepository.findByTime(start, end, pageable);
             return list;
         } catch (Exception e) {
-            logger.error(e.getMessage() + "解析日期出现错误");
+            logger.error("解析日期出现错误", e);
 
         }
         return null;
@@ -431,18 +429,15 @@ public class ReportCollectController {
         //dept传值没有错
         while (it.hasNext()) {
             fc = it.next();
-            if (StringUtils.isEmpty(fc.getDepartment())&&StringUtils.isEmpty(dept.trim())
-                &&fc.getDepartment().trim().equals(dept.trim())
+            if (StringUtils.isEmpty(fc.getDepartment()) && StringUtils.isEmpty(dept.trim())
+                && fc.getDepartment().trim().equals(dept.trim())
                 && fc.getCategoryName().trim().equals(type.trim())) {
                 return fc.getNetWeight();
             }
 
-
         }
         return 0.0;
     }
-
-
 
     public Map<String, String> buildDepart2OperatorMap(
         ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
@@ -539,10 +534,6 @@ public class ReportCollectController {
         return map;
 
     }
-
-
-
-
 
 }
 

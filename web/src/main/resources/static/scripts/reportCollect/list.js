@@ -18,9 +18,10 @@ $(function () {
         pg.trigger('setPage', [$(this).val() - 1]);
     });
     $("#start,#end").datetimepicker(
-        {bootcssVer:3,
+        {
+            bootcssVer: 3,
             weekStart: 1,
-            todayBtn:  1,
+            todayBtn: 1,
             autoclose: 1,
             todayHighlight: 1,
             startView: 2,
@@ -75,6 +76,7 @@ var pageselectCallback = function (page_index, jq, size) {
             fillData(data.content);
         });
 }
+
 //填充分页数据
 function fillData(data) {
     var $list = $('#tbodyContent').empty();
@@ -82,15 +84,19 @@ function fillData(data) {
         var html = "";
         html += '<tr> ' +
             '<td>' + (v.department == null ? '' : v.department) + '</td>' +
-            '<td>' + (v.categoryId == null ? '' : v.categoryId) + '</td>' +
             '<td>' + (v.categoryName == null ? '' : v.categoryName) + '</td>' +
-            '<td>' + (v.netWeight == null ? '' : v.netWeight) + '</td>';
+            '<td>' + (v.netWeight == null ? '' : v.netWeight) + '</td>' +
+            '<td>' + (v.mweight == null ? '' : v.mweight) + '</td>' +
+            '<td>' + (v.transitp == null ? '' : v.transitp) + '</td>' +
+            '<td>' + (v.transitpt == null ? '' : getSmpFormatDateByLong(v.transitpt, true)) + '</td>';
         $list.append($(html));
 
     });
 }
+
 //分页结束
 var artdialog;
+
 function showDetail(id) {
     $.get("./" + id, {ts: new Date().getTime()}, function (data) {
         art.dialog({
@@ -112,7 +118,9 @@ function showDetail(id) {
         });
     });
 }
+
 var departments = null;
+
 function param1() {
     $.get("./department?t=" + new Date().getTime(), {
         start: $("#strat").val(),
@@ -124,6 +132,7 @@ function param1() {
 }
 
 var netweights = null;
+
 function param2() {
     $.get("./netweight?t=" + new Date().getTime(), {
         start: $("#start").val(),
@@ -179,6 +188,7 @@ function contains(string, substr, isIgnoreCase) {
     }
     return false;
 }
+
 function formatter(obj) {
 
     var temp = obj[2011];
@@ -272,7 +282,7 @@ function getNetByCategory(x) {
 
 
 function exportExcel() {
-    var u = "./exportExcel?start="+ $("#start").val()+"&end="+$("#end").val();
-    window.location.href=u
+    var u = "./exportExcel?start=" + $("#start").val() + "&end=" + $("#end").val();
+    window.location.href = u
 
 }
