@@ -10,7 +10,7 @@
     <modules>
         <module>web</module>
         <module>mysql</module>
-        <module>dataextact</module>
+        <module>dataextract</module>
     </modules>
 
     <parent>
