@@ -2,7 +2,7 @@ package com.test.web.controller;
 
 import com.test.mysql.entity.Garbage;
 import com.test.mysql.entity.User;
-import com.test.mysql.model.ElectronicDataForReportQo;
+import com.test.mysql.model.GabageDetailQo;
 import com.test.mysql.repository.DepartmentRepository;
 import com.test.mysql.repository.ElectronicDataForReportRepository;
 import com.test.mysql.repository.UserRepository;
@@ -70,34 +70,34 @@ public class ReportController {
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Page<Garbage> getList(ElectronicDataForReportQo electronicDataForReportQo) {
+    public Page<Garbage> getList(GabageDetailQo gabageDetailQo) {
         try {
-            Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.DESC, "id"));
+            Pageable pageable = new PageRequest(gabageDetailQo.getPage(), gabageDetailQo.getSize(), new Sort(Sort.Direction.DESC, "id"));
             Date start;
             Date end;
 
-            if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
+            if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
                 cal.add(Calendar.DATE, -30);
                 start = cal.getTime();
             } else {
-                out.print(electronicDataForReportQo.getStart() + "开始..........................");
-                start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
+                out.print(gabageDetailQo.getStart() + "开始..........................");
+                start = formatFull.parse(gabageDetailQo.getStart() + ":00");
             }
 
 
-            if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
+            if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
                 end = new Date();
             } else {
-                out.print(electronicDataForReportQo.getEnd() + "结束..........................");
-                end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
+                out.print(gabageDetailQo.getEnd() + "结束..........................");
+                end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
             }
 
             Page<Garbage> by2Fields = electronicDataForReportRepository
                     .findBy2Fields(
-                            electronicDataForReportQo.getCategoryName() == null || "".equals(electronicDataForReportQo.getCategoryName()) ? "%" : "%" + electronicDataForReportQo.getCategoryName() + "%",
-                            electronicDataForReportQo.getDepartment() == null || "".equals(electronicDataForReportQo.getDepartment()) ? "%" : "%" + electronicDataForReportQo.getDepartment() + "%",
+                            gabageDetailQo.getCategoryName() == null || "".equals(gabageDetailQo.getCategoryName()) ? "%" : "%" + gabageDetailQo.getCategoryName() + "%",
+                            gabageDetailQo.getDepartment() == null || "".equals(gabageDetailQo.getDepartment()) ? "%" : "%" + gabageDetailQo.getDepartment() + "%",
                             start, end, pageable);
             return by2Fields;
         } catch (Exception e) {
@@ -127,11 +127,11 @@ public class ReportController {
     @ResponseBody
     public ResponseEntity<byte[]> downloadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        ElectronicDataForReportQo electronicDataForReportQo = new ElectronicDataForReportQo();
-        electronicDataForReportQo.setStart(request.getParameter("start"));
-        electronicDataForReportQo.setEnd(request.getParameter("end"));
-        electronicDataForReportQo.setCategoryName(request.getParameter("categoryName"));
-        electronicDataForReportQo.setDepartment(request.getParameter("department"));
+        GabageDetailQo gabageDetailQo = new GabageDetailQo();
+        gabageDetailQo.setStart(request.getParameter("start"));
+        gabageDetailQo.setEnd(request.getParameter("end"));
+        gabageDetailQo.setCategoryName(request.getParameter("categoryName"));
+        gabageDetailQo.setDepartment(request.getParameter("department"));
         String[] head = new String[]{"病区", "垃圾类型", "重量", "操作员", "称重时间", "护士", "运输人员", "运输时间", "抽检人", "抽检时间", "装车人", "装车时间"};
 
         //创建workbook
@@ -150,7 +150,7 @@ public class ReportController {
         }
 
         //根据条件获取所有的称重记录
-        List<Garbage> list = this.getAllList(electronicDataForReportQo);
+        List<Garbage> list = this.getAllList(gabageDetailQo);
 
         //存入数据
         for (short i = 0; i < list.size(); i++) {   //行索引
@@ -208,33 +208,33 @@ public class ReportController {
     }
 
 
-    public List<Garbage> getAllList(ElectronicDataForReportQo electronicDataForReportQo) {
-        Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
+    public List<Garbage> getAllList(GabageDetailQo gabageDetailQo) {
+        Pageable pageable = new PageRequest(gabageDetailQo.getPage(), gabageDetailQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
         List<Garbage> list = new ArrayList<>();
         SimpleDateFormat formatFull = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
         Date start;
         Date end;
         try {
-            if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
+            if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
                 cal.add(Calendar.MONTH, -1);
                 start = cal.getTime();
             } else {
-                out.print(electronicDataForReportQo.getStart() + "开始..........................");
-                start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
+                out.print(gabageDetailQo.getStart() + "开始..........................");
+                start = formatFull.parse(gabageDetailQo.getStart() + ":00");
             }
 
 
-            if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
+            if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
                 end = new Date();
             } else {
-                out.print(electronicDataForReportQo.getEnd() + "结束..........................");
-                end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
+                out.print(gabageDetailQo.getEnd() + "结束..........................");
+                end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
             }
             list = electronicDataForReportRepository.findBy2Fields(
-                    electronicDataForReportQo.getCategoryName() == null ? "%" : "%" + electronicDataForReportQo.getCategoryName() + "%",
-                    electronicDataForReportQo.getDepartment() == null ? "%" : "%" + electronicDataForReportQo.getDepartment() + "%",
+                    gabageDetailQo.getCategoryName() == null ? "%" : "%" + gabageDetailQo.getCategoryName() + "%",
+                    gabageDetailQo.getDepartment() == null ? "%" : "%" + gabageDetailQo.getDepartment() + "%",
                     start, end);
             return list;
         } catch (Exception e) {

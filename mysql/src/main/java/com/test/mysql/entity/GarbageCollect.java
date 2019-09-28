@@ -13,6 +13,18 @@ import lombok.Data;
 @Entity
 @Data
 public class GarbageCollect implements java.io.Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String categoryId;  // 物料号
+    private String categoryName; // 物料名称
+    private Double netWeight;  //  净重
+    private String department;  //  科室
+    private String transitp; //装车人
+    private Date transitpt;  //装车时间
+    private Double mweight;
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -33,17 +45,7 @@ public class GarbageCollect implements java.io.Serializable {
         return department != null ? department.equals(that.department) : that.department == null;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private Long id;
-    private String categoryId;  // 物料号
-    private String categoryName; // 物料名称
-    private Double netWeight;  //  净重
-    private String department;  //  科室
-    private String transitp; //装车人
-    private Date transitpt;  //装车时间
-    private Double mweight;
 
     public GarbageCollect(String categoryId, String categoryName, String department, Double netWeight, Double mweight,
                           String transitp, Date transitpt) {

@@ -7,7 +7,7 @@ import lombok.Data;
  * Created by dongmingjun on 2017/5/15.
  */
 @Data
-public class ElectronicDataForReportQo  extends PageQo{
+public class GabageDetailQo extends PageQo{
     private Long id;
     private String categoryId;  // 物料号
     private String categoryName; // 物料名称

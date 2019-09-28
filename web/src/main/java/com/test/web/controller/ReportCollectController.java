@@ -3,7 +3,7 @@ package com.test.web.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.test.mysql.entity.*;
-import com.test.mysql.model.ElectronicDataForReportQo;
+import com.test.mysql.model.GabageDetailQo;
 import com.test.mysql.repository.DepartmentRepository;
 import com.test.mysql.repository.ElectronicDataForReportRepository;
 import com.test.mysql.repository.ReportCollectRepository;
@@ -66,25 +66,25 @@ public class ReportCollectController {
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Page<GarbageCollect> listReport(ElectronicDataForReportQo electronicDataForReportQo) {
-        Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
+    public Page<GarbageCollect> listReport(GabageDetailQo gabageDetailQo) {
+        Pageable pageable = new PageRequest(gabageDetailQo.getPage(), gabageDetailQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
         Page<GarbageCollect> list = null;
         try {
-            if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
+            if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
                 cal.add(Calendar.DATE, -30);
                 start = cal.getTime();
             } else {
-                start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
+                start = formatFull.parse(gabageDetailQo.getStart() + ":00");
             }
 
-            if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
+            if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
                 end = new Date();
             } else {
-                end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
+                end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
             }
             list = reportCollectRepository.findByTime(start, end, pageable);
             return list;
@@ -96,30 +96,30 @@ public class ReportCollectController {
     }
 
     @RequestMapping("/view")
-    public String view(ModelMap model, ElectronicDataForReportQo electronicDataForReportQo) {
+    public String view(ModelMap model, GabageDetailQo gabageDetailQo) {
         return "reportCollect/view";
 
     }
 
-    public List<GarbageCollect> getAllList(ElectronicDataForReportQo electronicDataForReportQo) {
-        Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
+    public List<GarbageCollect> getAllList(GabageDetailQo gabageDetailQo) {
+        Pageable pageable = new PageRequest(gabageDetailQo.getPage(), gabageDetailQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
         List<GarbageCollect> list = new ArrayList<GarbageCollect>();
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
         try {
-            if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
+            if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
                 cal.add(Calendar.DATE, -30);
                 start = cal.getTime();
             } else {
-                start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
+                start = formatFull.parse(gabageDetailQo.getStart() + ":00");
             }
 
-            if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
+            if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
                 end = new Date();
             } else {
-                end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
+                end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
             }
             list = reportCollectRepository.findAll(start, end);
             return list;
@@ -132,7 +132,7 @@ public class ReportCollectController {
 
     @RequestMapping(value = "/department")
     @ResponseBody
-    public JSONArray viewDepartment(ElectronicDataForReportQo electronicDataForReportQo) {
+    public JSONArray viewDepartment(GabageDetailQo gabageDetailQo) {
         //获取部门列表
         List<Department> departments = departmentRepository.findAll();
         JSONArray array = new JSONArray();
@@ -149,9 +149,9 @@ public class ReportCollectController {
 
     @RequestMapping(value = "/netweight")
     @ResponseBody
-    public JSONArray viewNetWeight(ElectronicDataForReportQo electronicDataForReportQo) {
+    public JSONArray viewNetWeight(GabageDetailQo gabageDetailQo) {
 
-        Iterator<GarbageCollect> netWeightList = this.getAllList(electronicDataForReportQo).iterator();
+        Iterator<GarbageCollect> netWeightList = this.getAllList(gabageDetailQo).iterator();
         JSONArray array = new JSONArray();
         GarbageCollect fg = new GarbageCollect();
         while (netWeightList.hasNext()) {
@@ -172,19 +172,19 @@ public class ReportCollectController {
     @ResponseBody
     public ResponseEntity<byte[]> downloadFile(HttpServletRequest request,
                                                HttpServletResponse response) throws Exception {
-        ElectronicDataForReportQo electronicDataForReportQo = new ElectronicDataForReportQo();
-        electronicDataForReportQo.setStart(request.getParameter("start"));
-        electronicDataForReportQo.setEnd(request.getParameter("end"));
+        GabageDetailQo gabageDetailQo = new GabageDetailQo();
+        gabageDetailQo.setStart(request.getParameter("start"));
+        gabageDetailQo.setEnd(request.getParameter("end"));
         //拿到净重数据
-        List<GarbageCollect> netWeightList = this.getAllList(electronicDataForReportQo);
+        List<GarbageCollect> netWeightList = this.getAllList(gabageDetailQo);
         //获取部门列表
         List<Department> departments = departmentRepository.findAll();
         //构建部门和操作员map
-        Map<String, String> deptOperaMap = buildDepart2OperatorMap(electronicDataForReportQo);
+        Map<String, String> deptOperaMap = buildDepart2OperatorMap(gabageDetailQo);
         //构建运输人员map
-        Map<String, String> transMap = buildDepart2TransMap(electronicDataForReportQo);
+        Map<String, String> transMap = buildDepart2TransMap(gabageDetailQo);
         //构建部门和护士map
-        Map<String, String> nurseMap = buildDepart2NurseMap(electronicDataForReportQo);
+        Map<String, String> nurseMap = buildDepart2NurseMap(gabageDetailQo);
 
         //获取垃圾类型
         String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "其他废物"};
@@ -395,23 +395,23 @@ public class ReportCollectController {
     }
 
     public Map<String, String> buildDepart2OperatorMap(
-            ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
+            GabageDetailQo gabageDetailQo) throws ParseException {
 
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
-        if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
+        if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.DATE, -30);
             start = cal.getTime();
         } else {
-            start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
+            start = formatFull.parse(gabageDetailQo.getStart() + ":00");
         }
 
-        if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
+        if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
             end = new Date();
         } else {
-            end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
+            end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
         }
 
         List<Object[]> list = reportRepository.findBy2Fields(start, end);
@@ -421,23 +421,23 @@ public class ReportCollectController {
     }
 
     public Map<String, String> buildDepart2NurseMap(
-            ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
+            GabageDetailQo gabageDetailQo) throws ParseException {
 
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
-        if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
+        if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.DATE, -30);
             start = cal.getTime();
         } else {
-            start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
+            start = formatFull.parse(gabageDetailQo.getStart() + ":00");
         }
 
-        if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
+        if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
             end = new Date();
         } else {
-            end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
+            end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
         }
 
         List<Object[]> list = reportRepository.findDistinctNurse(start, end);
@@ -447,23 +447,23 @@ public class ReportCollectController {
     }
 
     public Map<String, String> buildDepart2TransMap(
-            ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
+            GabageDetailQo gabageDetailQo) throws ParseException {
 
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
-        if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
+        if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.DATE, -30);
             start = cal.getTime();
         } else {
-            start = formatFull.parse(electronicDataForReportQo.getStart() + ":00");
+            start = formatFull.parse(gabageDetailQo.getStart() + ":00");
         }
 
-        if (electronicDataForReportQo.getEnd() == null || electronicDataForReportQo.getEnd() == "") {
+        if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
             end = new Date();
         } else {
-            end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
+            end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
         }
 
         List<Object[]> list = reportRepository.findDistinctTrans(start, end);
