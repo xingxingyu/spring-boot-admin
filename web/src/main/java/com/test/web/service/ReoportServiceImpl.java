@@ -75,7 +75,17 @@ public class ReoportServiceImpl implements ReoportService {
                 row.createCell(j).setCellValue(findVale(garbageType[j - 1], i, monthStatiscs));
             }
 
+
         }
+        //合计
+        row = sheet1.createRow(34);
+        row.createCell(0).setCellValue("合计");
+        for (int j = 1; j < 7; j++) {
+            row.createCell(j).setCellValue(sumCatogory(garbageType[j - 1], monthStatiscs));
+        }
+        row.createCell(7).setCellValue(sum(monthStatiscs));
+
+
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             workbook.write(out);
@@ -145,6 +155,27 @@ public class ReoportServiceImpl implements ReoportService {
             monthStatiscs.add(monthStatisc);
         }
         return monthStatiscs;
+    }
+
+    double sumCatogory(String categoryName, List<MonthStatisc> monthStatiscList) {
+        double sum = 0.0;
+
+        for (MonthStatisc monthStatisc : monthStatiscList) {
+            if (
+                    categoryName.equals(monthStatisc.getCategoryName())
+            ) {
+                sum += monthStatisc.getNetWeight();
+            }
+        }
+        return sum;
+    }
+
+    double sum(List<MonthStatisc> monthStatiscList) {
+        double sum = 0.0;
+        for (MonthStatisc monthStatisc : monthStatiscList) {
+            sum += monthStatisc.getNetWeight();
+        }
+        return sum;
     }
 
 }
