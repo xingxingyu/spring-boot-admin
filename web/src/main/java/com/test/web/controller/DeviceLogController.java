@@ -9,6 +9,7 @@ import com.test.mysql.repository.DeviceLogRepository;
 import com.test.mysql.repository.UserLogRepository;
 import com.test.web.Utils.DateUtil;
 import com.test.web.config.CustomSecurityMetadataSource;
+import com.test.web.service.security.RoleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,52 +46,12 @@ public class DeviceLogController {
     Date end = DateUtil.getTime(0,0,0,0);
     @Autowired
     private DeviceLogRepository deviceLogRepository;
+    @Autowired
+    private RoleManager roleManager;
+
     @RequestMapping("/index")
-    public String userlog(ModelMap model, Principal user) throws Exception{
-        Authentication authentication = (Authentication) user;
-        List<String> userroles = new ArrayList<String>();
-        for (GrantedAuthority ga : authentication.getAuthorities()) {
-            userroles.add(ga.getAuthority());
-        }
-
-        boolean newrole = false, editrole = false, deleterole = false;
-        for (String key : CustomSecurityMetadataSource.resourceMap.keySet()) {
-            if (key.contains("new")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        newrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("edit")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        editrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("delete")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        deleterole = true;
-                        break;
-                    }
-                }
-
-            }
-        }
-
-        out.print("new role is" + newrole + "editrole is " + editrole + "deleterole is " + deleterole);
-        model.addAttribute("newrole", newrole);
-        model.addAttribute("editrole", editrole);
-        model.addAttribute("deleterole", deleterole);
-
-        model.addAttribute("user", user);
-        logger.info("设备日志页面被访问到");
+    public String userlog(Model model, Principal user) {
+        roleManager.giveAuthority(model,user);
         return "devicelog/index";
     }
     @RequestMapping(value = "/list")

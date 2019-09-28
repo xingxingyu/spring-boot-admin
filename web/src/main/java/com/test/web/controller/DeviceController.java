@@ -9,6 +9,7 @@ import com.test.web.Utils.PingUtil;
 
 import com.test.web.Utils.ResultType;
 import com.test.web.config.CustomSecurityMetadataSource;
+import com.test.web.service.security.RoleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,60 +46,17 @@ public class DeviceController {
     private DeviceRepository deviceRepository;
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private DepartmentRepository departmentRepository;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private UserLogRepository userLogRepository;
 
+    private RoleManager roleManager;
 
     @RequestMapping("/index")
-    public String index(ModelMap model, Principal user) throws Exception {
-        Authentication authentication = (Authentication) user;
-        List<String> userroles = new ArrayList<String>();
-        for (GrantedAuthority ga : authentication.getAuthorities()) {
-            userroles.add(ga.getAuthority());
-        }
-
-        boolean newrole = false, editrole = false, deleterole = false;
-        for (String key : CustomSecurityMetadataSource.resourceMap.keySet()) {
-            if (key.contains("new")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        newrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("edit")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        editrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("delete")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        deleterole = true;
-                        break;
-                    }
-                }
-
-            }
-        }
-
-        out.print("new role is" + newrole + "editrole is " + editrole + "deleterole is " + deleterole);
-        model.addAttribute("newrole", newrole);
-        model.addAttribute("editrole", editrole);
-        model.addAttribute("deleterole", deleterole);
-
-        model.addAttribute("user", user);
+    public String index(Model model, Principal user) throws Exception {
+        roleManager.giveAuthority(model, user);
         return "device/index";
     }
 
@@ -110,45 +69,6 @@ public class DeviceController {
             userroles.add(ga.getAuthority());
         }
 
-/*        boolean newrole=false,editrole=false,deleterole=false;
-        if(!StringUtils.isEmpty(urlroles)) {
-            String[] resouces = urlroles.split(";");
-            for (String resource : resouces) {
-                String[] urls = resource.split("=");
-                if(urls[0].indexOf("new") > 0){
-                    String[] newroles = urls[1].split(",");
-                    for(String str : newroles){
-                        str = str.trim();
-                        if(userroles.contains(str)){
-                            newrole = true;
-                            break;
-                        }
-                    }
-                }else if(urls[0].indexOf("edit") > 0){
-                    String[] editoles = urls[1].split(",");
-                    for(String str : editoles){
-                        str = str.trim();
-                        if(userroles.contains(str)){
-                            editrole = true;
-                            break;
-                        }
-                    }
-                }else if(urls[0].indexOf("delete") > 0){
-                    String[] deleteroles = urls[1].split(",");
-                    for(String str : deleteroles){
-                        str = str.trim();
-                        if(userroles.contains(str)){
-                            deleterole = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("newrole", newrole);
-        model.addAttribute("editrole", editrole);
-        model.addAttribute("deleterole", deleterole);*/
 
         model.addAttribute("user", user);
         return "device/monitor";

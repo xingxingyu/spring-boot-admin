@@ -9,7 +9,10 @@ import com.test.mysql.repository.ElectronicDataForReportRepository;
 import com.test.mysql.repository.ReportCollectRepository;
 import com.test.web.Utils.DateUtil;
 import com.test.web.config.CustomSecurityMetadataSource;
+
 import java.text.ParseException;
+
+import com.test.web.service.security.RoleManager;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
@@ -27,6 +30,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,51 +58,12 @@ public class ReportCollectController {
     private DepartmentRepository departmentRepository;
     @Autowired
     private ElectronicDataForReportRepository reportRepository;
+    @Autowired
+    private RoleManager roleManager;
 
     @RequestMapping("/index")
-    public String index(ModelMap model, Principal user) throws Exception {
-        Authentication authentication = (Authentication)user;
-        List<String> userroles = new ArrayList<String>();
-        for (GrantedAuthority ga : authentication.getAuthorities()) {
-            userroles.add(ga.getAuthority());
-        }
-
-        boolean newrole = false, editrole = false, deleterole = false;
-        for (String key : CustomSecurityMetadataSource.resourceMap.keySet()) {
-            if (key.contains("new")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        newrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("edit")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        editrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("delete")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        deleterole = true;
-                        break;
-                    }
-                }
-
-            }
-        }
-
-        model.addAttribute("newrole", newrole);
-        model.addAttribute("editrole", editrole);
-        model.addAttribute("deleterole", deleterole);
-
-        model.addAttribute("user", user);
+    public String index(Model model, Principal user) throws Exception {
+        roleManager.giveAuthority(model, user);
         logger.info("汇总报表页面被访问到");
         return "reportCollect/index";
     }
@@ -215,7 +180,7 @@ public class ReportCollectController {
     @RequestMapping("/exportExcel")
     @ResponseBody
     public ResponseEntity<byte[]> downloadFile(HttpServletRequest request,
-        HttpServletResponse response) throws Exception {
+                                               HttpServletResponse response) throws Exception {
         ElectronicDataForReportQo electronicDataForReportQo = new ElectronicDataForReportQo();
         electronicDataForReportQo.setStart(request.getParameter("start"));
         electronicDataForReportQo.setEnd(request.getParameter("end"));
@@ -231,7 +196,7 @@ public class ReportCollectController {
         Map<String, String> nurseMap = buildDepart2NurseMap(electronicDataForReportQo);
 
         //获取垃圾类型
-        String[] garbageType = new String[] {"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "其他废物"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "其他废物"};
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废物院内交接登记表";
@@ -286,7 +251,7 @@ public class ReportCollectController {
 
         //创建时间签名栏
         //       String[] signs = new String[] {"交接时间", "操作员签名", "专职运送签名", "医疗废物最终去向"};
-        String[] signs = new String[] {"交接时间", "操作员签名", "运输人员", "护士签名", "医疗废物最终去向"};
+        String[] signs = new String[]{"交接时间", "操作员签名", "运输人员", "护士签名", "医疗废物最终去向"};
 
         row = sheet1.getRow(3);
         for (short i = 0; i < signs.length; i++) {
@@ -299,7 +264,7 @@ public class ReportCollectController {
         }
 
         //左边数据条数
-        int leftResordes = (int)Math.ceil((double)departments.size() / (double)2);
+        int leftResordes = (int) Math.ceil((double) departments.size() / (double) 2);
 
         //存入左边数据
         for (short i = 5; i < leftResordes + 5; i++) {   //行索引
@@ -430,8 +395,8 @@ public class ReportCollectController {
         while (it.hasNext()) {
             fc = it.next();
             if (StringUtils.isEmpty(fc.getDepartment()) && StringUtils.isEmpty(dept.trim())
-                && fc.getDepartment().trim().equals(dept.trim())
-                && fc.getCategoryName().trim().equals(type.trim())) {
+                    && fc.getDepartment().trim().equals(dept.trim())
+                    && fc.getCategoryName().trim().equals(type.trim())) {
                 return fc.getNetWeight();
             }
 
@@ -440,7 +405,7 @@ public class ReportCollectController {
     }
 
     public Map<String, String> buildDepart2OperatorMap(
-        ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
+            ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
 
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
@@ -466,7 +431,7 @@ public class ReportCollectController {
     }
 
     public Map<String, String> buildDepart2NurseMap(
-        ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
+            ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
 
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
@@ -492,7 +457,7 @@ public class ReportCollectController {
     }
 
     public Map<String, String> buildDepart2TransMap(
-        ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
+            ElectronicDataForReportQo electronicDataForReportQo) throws ParseException {
 
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);

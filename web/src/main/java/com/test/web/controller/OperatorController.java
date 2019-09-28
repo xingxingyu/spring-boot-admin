@@ -7,6 +7,7 @@ import com.test.mysql.repository.*;
 import com.test.web.Utils.LogType;
 import com.test.web.Utils.ResultType;
 import com.test.web.config.CustomSecurityMetadataSource;
+import com.test.web.service.security.RoleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,61 +51,20 @@ public class OperatorController {
     private UserLogRepository userLogRepository;
     @Autowired
     private OperatorRepository operatorRepository;
-
+    @Autowired
+    private RoleManager roleManager;
 
 
     @RequestMapping("/index")
-    public String index(ModelMap model, Principal user) throws Exception{
-        Authentication authentication = (Authentication) user;
-        List<String> userroles = new ArrayList<String>();
-        for (GrantedAuthority ga : authentication.getAuthorities()) {
-            userroles.add(ga.getAuthority());
-        }
-
-        boolean newrole = false, editrole = false, deleterole = false;
-        for (String key : CustomSecurityMetadataSource.resourceMap.keySet()) {
-            if (key.contains("new")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        newrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("edit")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        editrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("delete")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        deleterole = true;
-                        break;
-                    }
-                }
-
-            }
-        }
-
-        out.print("new role is" + newrole + "editrole is " + editrole + "deleterole is " + deleterole);
-        model.addAttribute("newrole", newrole);
-        model.addAttribute("editrole", editrole);
-        model.addAttribute("deleterole", deleterole);
-
-        model.addAttribute("user", user);
+    public String index(Model model, Principal user) throws Exception {
+        roleManager.giveAuthority(model, user);
         return "operator/index";
     }
 
-    @RequestMapping(value="/{id}")
-    public String show(ModelMap model,@PathVariable Long id) {
+    @RequestMapping(value = "/{id}")
+    public String show(ModelMap model, @PathVariable Long id) {
         User user = userRepository.findOne(id);
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
         return "operator/show";
     }
 
@@ -112,68 +73,68 @@ public class OperatorController {
     public Page<Operator> getList(OperatorQo operatorQo) {
         try {
             Pageable pageable = new PageRequest(operatorQo.getPage(), operatorQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
-         out.print("Operator:" + operatorQo.getOperator() + "Department:" + operatorQo.getDepartment());
-            return operatorRepository.findAllPage(operatorQo.getOperator()==null?"%":"%"+operatorQo.getOperator()+"%",
-                    operatorQo.getDepartment()==null?"%":"%"+operatorQo.getDepartment()+"%", pageable);
-        }catch (Exception e){
+            out.print("Operator:" + operatorQo.getOperator() + "Department:" + operatorQo.getDepartment());
+            return operatorRepository.findAllPage(operatorQo.getOperator() == null ? "%" : "%" + operatorQo.getOperator() + "%",
+                    operatorQo.getDepartment() == null ? "%" : "%" + operatorQo.getDepartment() + "%", pageable);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @RequestMapping("/new")
-    public String create(ModelMap model,User user){
+    public String create(ModelMap model, User user) {
         List<Department> departments = departmentRepository.findAll();
         List<Role> roles = roleRepository.findAll();
 
-        model.addAttribute("departments",departments);
+        model.addAttribute("departments", departments);
         model.addAttribute("roles", roles);
         model.addAttribute("user", user);
 
         return "operator/new";
     }
 
-    @RequestMapping(value="/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public String save(Operator operator,Principal user) throws Exception{
+    public String save(Operator operator, Principal user) throws Exception {
         operator.setCreateTime(new Date());
         operator.setUpdateTime(new Date());
         operator.setCreatedBy(user.getName());
         operator.setUpdatedBy(user.getName());
         operatorRepository.save(operator);
-        logger.info("新增->ID="+operator.getId());
+        logger.info("新增->ID=" + operator.getId());
         userLogRepository.save(new Userlog(user.getName(),
                 new Date(), LogType.ADD_META, ResultType.SUCCESS
         ));
         return "1";
     }
 
-    @RequestMapping(value="/edit/{id}")
-    public String update(ModelMap model,@PathVariable Long id){
+    @RequestMapping(value = "/edit/{id}")
+    public String update(ModelMap model, @PathVariable Long id) {
         Operator operator = operatorRepository.findOne(id);
         model.addAttribute("operator", operator);
         return "operator/edit";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value="/update")
+    @RequestMapping(method = RequestMethod.POST, value = "/update")
     @ResponseBody
-    public String update(Operator operator,Principal user) throws Exception{
+    public String update(Operator operator, Principal user) throws Exception {
 
         operator.setUpdateTime(new Date());
         operator.setUpdatedBy(user.getName());
         operatorRepository.save(operator);
-        logger.info("修改->ID="+operator.getId());
+        logger.info("修改->ID=" + operator.getId());
         userLogRepository.save(new Userlog(user.getName(),
                 new Date(), LogType.UPDATE_USER, ResultType.SUCCESS
         ));
         return "1";
     }
 
-    @RequestMapping(value="/delete/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public String delete(@PathVariable Long id,Principal user) throws Exception{
+    public String delete(@PathVariable Long id, Principal user) throws Exception {
         operatorRepository.delete(id);
-        logger.info("删除->ID="+id);
+        logger.info("删除->ID=" + id);
         userLogRepository.save(new Userlog(user.getName(),
                 new Date(), LogType.DELETE_META, ResultType.SUCCESS
         ));

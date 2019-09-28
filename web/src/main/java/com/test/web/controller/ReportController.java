@@ -68,9 +68,9 @@ public class ReportController {
 
     @RequestMapping("/index")
     public String index(ModelMap model, Principal principal) throws Exception {
-        Model newModle = roleManager.giveAuthority((Model) model, principal);
+        roleManager.giveAuthority((Model) model, principal);
         List<String> category = electronicDataForReportRepository.findCategory();
-        newModle.addAttribute("category", category);
+        model.addAttribute("category", category);
         return "report/index";
     }
 
@@ -139,7 +139,7 @@ public class ReportController {
         electronicDataForReportQo.setEnd(request.getParameter("end"));
         electronicDataForReportQo.setCategoryName(request.getParameter("categoryName"));
         electronicDataForReportQo.setDepartment(request.getParameter("department"));
-        String[] head = new String[]{"病区","垃圾类型","重量","操作员","称重时间","护士","运输人员","运输时间","抽检人","抽检时间","装车人","装车时间"};
+        String[] head = new String[]{"病区", "垃圾类型", "重量", "操作员", "称重时间", "护士", "运输人员", "运输时间", "抽检人", "抽检时间", "装车人", "装车时间"};
 
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -209,7 +209,7 @@ public class ReportController {
         try {
             out.close();
         } catch (IOException e) {
-         logger.error("服务器内部错误",e);
+            logger.error("服务器内部错误", e);
         }
         return filebyte;
     }
