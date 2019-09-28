@@ -1,9 +1,8 @@
 package com.test.web.config;
 
-import com.test.mysql.entity.Userlog;
 import com.test.mysql.repository.UserLogRepository;
-import com.test.web.service.CustomUserDetailsService;
-import com.test.web.service.LoginSuccessHandler;
+import com.test.web.service.security.CustomUserDetailsService;
+import com.test.web.service.security.LoginSuccessHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;

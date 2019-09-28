@@ -1,6 +1,6 @@
 package com.test.web.controller;
 
-import com.test.web.service.ImageCode;
+import com.test.web.service.security.ImageCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;

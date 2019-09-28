@@ -1,4 +1,4 @@
-package com.test.web.service;
+package com.test.web.service.security;
 
 import com.test.mysql.entity.Role;
 import com.test.mysql.entity.User;

@@ -1,4 +1,4 @@
-package com.test.web.service;
+package com.test.web.service.security;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
