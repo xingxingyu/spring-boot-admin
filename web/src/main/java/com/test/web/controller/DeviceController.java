@@ -52,6 +52,7 @@ public class DeviceController {
     @Autowired
     private UserLogRepository userLogRepository;
 
+    @Autowired
     private RoleManager roleManager;
 
     @RequestMapping("/index")

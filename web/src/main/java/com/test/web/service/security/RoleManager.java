@@ -3,7 +3,7 @@ package com.test.web.service.security;
 import com.test.mysql.entity.Department;
 import com.test.mysql.entity.User;
 import com.test.mysql.repository.DepartmentRepository;
-import com.test.mysql.repository.ElectronicDataForReportRepository;
+import com.test.mysql.repository.GarbageDetailRepository;
 import com.test.mysql.repository.UserRepository;
 import com.test.web.config.CustomSecurityMetadataSource;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ import java.util.List;
 public class RoleManager {
     private static final Logger logger = LoggerFactory.getLogger(RoleManager.class);
     @Autowired
-    private ElectronicDataForReportRepository electronicDataForReportRepository;
+    private GarbageDetailRepository garbageDetailRepository;
     @Autowired
     private DepartmentRepository departmentRepository;
     @Autowired

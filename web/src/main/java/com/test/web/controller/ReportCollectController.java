@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.test.mysql.entity.*;
 import com.test.mysql.model.GabageDetailQo;
 import com.test.mysql.repository.DepartmentRepository;
-import com.test.mysql.repository.ElectronicDataForReportRepository;
+import com.test.mysql.repository.GarbageDetailRepository;
 import com.test.mysql.repository.ReportCollectRepository;
 import com.test.web.Utils.DateUtil;
 
@@ -53,7 +53,7 @@ public class ReportCollectController {
     @Autowired
     private DepartmentRepository departmentRepository;
     @Autowired
-    private ElectronicDataForReportRepository reportRepository;
+    private GarbageDetailRepository reportRepository;
     @Autowired
     private RoleManager roleManager;
 

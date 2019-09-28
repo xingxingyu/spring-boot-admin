@@ -1,12 +1,16 @@
 package com.test.web.service;
 
+import com.test.mysql.entity.MonthStatisc;
+
+import java.util.List;
+
 public interface ReoportService {
     /**
      * 医疗废物院内交接登记表
      *
      * @return
      */
-    byte[] buildReport1(String start, String end);
+    byte[] downloadReport1(String start, String end);
 
 
     /**
@@ -14,7 +18,7 @@ public interface ReoportService {
      *
      * @return
      */
-    byte[] buildReport2(String month);
+    byte[] downloadReport2(String month);
 
 
     /**
@@ -22,6 +26,6 @@ public interface ReoportService {
      *
      * @return
      */
-    byte[] listReport2(String month);
+    List<MonthStatisc> listReport2(String month);
 
 }

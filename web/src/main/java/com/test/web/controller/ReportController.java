@@ -4,7 +4,7 @@ import com.test.mysql.entity.Garbage;
 import com.test.mysql.entity.User;
 import com.test.mysql.model.GabageDetailQo;
 import com.test.mysql.repository.DepartmentRepository;
-import com.test.mysql.repository.ElectronicDataForReportRepository;
+import com.test.mysql.repository.GarbageDetailRepository;
 import com.test.mysql.repository.UserRepository;
 import com.test.web.service.security.RoleManager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -50,7 +50,7 @@ public class ReportController {
     private static Logger logger = LoggerFactory.getLogger(ReportController.class);
     private SimpleDateFormat formatFull = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
     @Autowired
-    private ElectronicDataForReportRepository electronicDataForReportRepository;
+    private GarbageDetailRepository garbageDetailRepository;
     @Autowired
     private DepartmentRepository departmentRepository;
     @Autowired
@@ -62,7 +62,7 @@ public class ReportController {
     @RequestMapping("/index")
     public String index(ModelMap model, Principal principal) throws Exception {
         roleManager.giveAuthority((Model) model, principal);
-        List<String> category = electronicDataForReportRepository.findCategory();
+        List<String> category = garbageDetailRepository.findCategory();
         model.addAttribute("category", category);
         return "report/index";
     }
@@ -94,7 +94,7 @@ public class ReportController {
                 end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
             }
 
-            Page<Garbage> by2Fields = electronicDataForReportRepository
+            Page<Garbage> by2Fields = garbageDetailRepository
                     .findBy2Fields(
                             gabageDetailQo.getCategoryName() == null || "".equals(gabageDetailQo.getCategoryName()) ? "%" : "%" + gabageDetailQo.getCategoryName() + "%",
                             gabageDetailQo.getDepartment() == null || "".equals(gabageDetailQo.getDepartment()) ? "%" : "%" + gabageDetailQo.getDepartment() + "%",
@@ -232,7 +232,7 @@ public class ReportController {
                 out.print(gabageDetailQo.getEnd() + "结束..........................");
                 end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
             }
-            list = electronicDataForReportRepository.findBy2Fields(
+            list = garbageDetailRepository.findBy2Fields(
                     gabageDetailQo.getCategoryName() == null ? "%" : "%" + gabageDetailQo.getCategoryName() + "%",
                     gabageDetailQo.getDepartment() == null ? "%" : "%" + gabageDetailQo.getDepartment() + "%",
                     start, end);

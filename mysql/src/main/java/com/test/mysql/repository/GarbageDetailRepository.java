@@ -1,6 +1,7 @@
 package com.test.mysql.repository;
 
 import com.test.mysql.entity.Garbage;
+import com.test.mysql.entity.MonthStatisc;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface ElectronicDataForReportRepository extends JpaRepository<Garbage, Long> {
+public interface GarbageDetailRepository extends JpaRepository<Garbage, Long> {
 
     @Query("select e from f_garbage e " +
         "where e.categoryName like :categoryName and  e.department like :department  and e.up_Date >= :start and e.up_Date <= :end ")
@@ -37,5 +38,6 @@ public interface ElectronicDataForReportRepository extends JpaRepository<Garbage
 
     @Query(value = "select distinct e.department,nullif(e.transName,'') from f_garbage e where e.up_Date BETWEEN :start and :end group by department", nativeQuery = false)
     List<Object[]> findDistinctTrans(@Param("start") Date start, @Param("end") Date end);
+
 
 }
