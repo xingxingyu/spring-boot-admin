@@ -1,5 +1,6 @@
 package com.test.mysql.entity;
 
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "department")
+@Data
 public class Department implements java.io.Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,31 +18,4 @@ public class Department implements java.io.Serializable{
     private Date createdate;
     @Column(name = "department_id")
     private String departmentId;
-
-    public Department() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreatedate() {
-        return createdate;
-    }
-
-    public void setCreatedate(Date createdate) {
-        this.createdate = createdate;
-    }
 }

@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Entity
 @Data
-public class F_garbageCollect implements java.io.Serializable {
+public class GarbageCollect implements java.io.Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -20,7 +20,7 @@ public class F_garbageCollect implements java.io.Serializable {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        F_garbageCollect that = (F_garbageCollect)o;
+        GarbageCollect that = (GarbageCollect)o;
 
         if (Double.compare(that.netWeight, netWeight) != 0)
             return false;
@@ -45,8 +45,8 @@ public class F_garbageCollect implements java.io.Serializable {
     private Date transitpt;  //装车时间
     private Double mweight;
 
-    public F_garbageCollect(String categoryId, String categoryName, String department, Double netWeight, Double mweight,
-        String transitp, Date transitpt) {
+    public GarbageCollect(String categoryId, String categoryName, String department, Double netWeight, Double mweight,
+                          String transitp, Date transitpt) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
         this.netWeight = netWeight;
@@ -56,6 +56,6 @@ public class F_garbageCollect implements java.io.Serializable {
         this.mweight = mweight;
     }
 
-    public F_garbageCollect() {
+    public GarbageCollect() {
     }
 }

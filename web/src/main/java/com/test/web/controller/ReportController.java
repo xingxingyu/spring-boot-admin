@@ -1,15 +1,11 @@
 package com.test.web.controller;
 
-import com.test.mysql.entity.Department;
-import com.test.mysql.entity.F_garbage;
-import com.test.mysql.entity.F_garbageCollect;
+import com.test.mysql.entity.Garbage;
 import com.test.mysql.entity.User;
 import com.test.mysql.model.ElectronicDataForReportQo;
 import com.test.mysql.repository.DepartmentRepository;
 import com.test.mysql.repository.ElectronicDataForReportRepository;
 import com.test.mysql.repository.UserRepository;
-import com.test.web.Utils.DateUtil;
-import com.test.web.config.CustomSecurityMetadataSource;
 import com.test.web.service.security.RoleManager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -26,9 +22,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -77,7 +70,7 @@ public class ReportController {
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Page<F_garbage> getList(ElectronicDataForReportQo electronicDataForReportQo) {
+    public Page<Garbage> getList(ElectronicDataForReportQo electronicDataForReportQo) {
         try {
             Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.DESC, "id"));
             Date start;
@@ -101,7 +94,7 @@ public class ReportController {
                 end = formatFull.parse(electronicDataForReportQo.getEnd() + ":59");
             }
 
-            Page<F_garbage> by2Fields = electronicDataForReportRepository
+            Page<Garbage> by2Fields = electronicDataForReportRepository
                     .findBy2Fields(
                             electronicDataForReportQo.getCategoryName() == null || "".equals(electronicDataForReportQo.getCategoryName()) ? "%" : "%" + electronicDataForReportQo.getCategoryName() + "%",
                             electronicDataForReportQo.getDepartment() == null || "".equals(electronicDataForReportQo.getDepartment()) ? "%" : "%" + electronicDataForReportQo.getDepartment() + "%",
@@ -157,7 +150,7 @@ public class ReportController {
         }
 
         //根据条件获取所有的称重记录
-        List<F_garbage> list = this.getAllList(electronicDataForReportQo);
+        List<Garbage> list = this.getAllList(electronicDataForReportQo);
 
         //存入数据
         for (short i = 0; i < list.size(); i++) {   //行索引
@@ -215,9 +208,9 @@ public class ReportController {
     }
 
 
-    public List<F_garbage> getAllList(ElectronicDataForReportQo electronicDataForReportQo) {
+    public List<Garbage> getAllList(ElectronicDataForReportQo electronicDataForReportQo) {
         Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
-        List<F_garbage> list = new ArrayList<>();
+        List<Garbage> list = new ArrayList<>();
         SimpleDateFormat formatFull = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
         Date start;
         Date end;

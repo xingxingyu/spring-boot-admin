@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity(name = "f_garbage")
 @Table(name = "f_garbage")
 @Data
-public class F_garbage implements java.io.Serializable {
+public class Garbage implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,10 +57,10 @@ public class F_garbage implements java.io.Serializable {
     private Date transitpt;
     private Double mweight;
 
-    public F_garbage() {
+    public Garbage() {
     }
 
-    public F_garbage(String department, String operator) {
+    public Garbage(String department, String operator) {
         this.department = department;
         this.operator = operator;
     }

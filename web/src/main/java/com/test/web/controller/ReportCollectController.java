@@ -8,7 +8,6 @@ import com.test.mysql.repository.DepartmentRepository;
 import com.test.mysql.repository.ElectronicDataForReportRepository;
 import com.test.mysql.repository.ReportCollectRepository;
 import com.test.web.Utils.DateUtil;
-import com.test.web.config.CustomSecurityMetadataSource;
 
 import java.text.ParseException;
 
@@ -26,9 +25,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -70,11 +66,11 @@ public class ReportCollectController {
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Page<F_garbageCollect> getList(ElectronicDataForReportQo electronicDataForReportQo) {
+    public Page<GarbageCollect> listReport(ElectronicDataForReportQo electronicDataForReportQo) {
         Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
-        Page<F_garbageCollect> list = null;
+        Page<GarbageCollect> list = null;
         try {
             if (electronicDataForReportQo.getStart() == null || electronicDataForReportQo.getStart() == "") {
                 Calendar cal = Calendar.getInstance();
@@ -105,9 +101,9 @@ public class ReportCollectController {
 
     }
 
-    public List<F_garbageCollect> getAllList(ElectronicDataForReportQo electronicDataForReportQo) {
+    public List<GarbageCollect> getAllList(ElectronicDataForReportQo electronicDataForReportQo) {
         Pageable pageable = new PageRequest(electronicDataForReportQo.getPage(), electronicDataForReportQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
-        List<F_garbageCollect> list = new ArrayList<F_garbageCollect>();
+        List<GarbageCollect> list = new ArrayList<GarbageCollect>();
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
         try {
@@ -155,9 +151,9 @@ public class ReportCollectController {
     @ResponseBody
     public JSONArray viewNetWeight(ElectronicDataForReportQo electronicDataForReportQo) {
 
-        Iterator<F_garbageCollect> netWeightList = this.getAllList(electronicDataForReportQo).iterator();
+        Iterator<GarbageCollect> netWeightList = this.getAllList(electronicDataForReportQo).iterator();
         JSONArray array = new JSONArray();
-        F_garbageCollect fg = new F_garbageCollect();
+        GarbageCollect fg = new GarbageCollect();
         while (netWeightList.hasNext()) {
             fg = netWeightList.next();
             JSONObject jsonObject = new JSONObject();
@@ -171,11 +167,6 @@ public class ReportCollectController {
 
     /**
      * 文件下载
-     *
-     * @param fileName
-     * @param request
-     * @param response
-     * @return
      */
     @RequestMapping("/exportExcel")
     @ResponseBody
@@ -185,7 +176,7 @@ public class ReportCollectController {
         electronicDataForReportQo.setStart(request.getParameter("start"));
         electronicDataForReportQo.setEnd(request.getParameter("end"));
         //拿到净重数据
-        List<F_garbageCollect> netWeightList = this.getAllList(electronicDataForReportQo);
+        List<GarbageCollect> netWeightList = this.getAllList(electronicDataForReportQo);
         //获取部门列表
         List<Department> departments = departmentRepository.findAll();
         //构建部门和操作员map
@@ -341,7 +332,6 @@ public class ReportCollectController {
             }
         }
         //护士签名
-        //todo
         for (int i = 0; i <= 6 + garbageType.length; i += (garbageType.length + 6)) {
             for (int j = 1; j <= leftResordes; j++) {
                 row = sheet1.getRow(4 + j) == null ? sheet1.createRow(4 + j) : sheet1.getRow(4 + j);
@@ -388,9 +378,9 @@ public class ReportCollectController {
     }
 
     //通过科室和垃圾类型查询净重
-    private Double getBydeptAndGarbageType(List<F_garbageCollect> f, String dept, String type) {
-        F_garbageCollect fc;
-        Iterator<F_garbageCollect> it = f.iterator();
+    private Double getBydeptAndGarbageType(List<GarbageCollect> f, String dept, String type) {
+        GarbageCollect fc;
+        Iterator<GarbageCollect> it = f.iterator();
         //dept传值没有错
         while (it.hasNext()) {
             fc = it.next();
@@ -499,6 +489,8 @@ public class ReportCollectController {
         return map;
 
     }
+
+
 
 }
 
