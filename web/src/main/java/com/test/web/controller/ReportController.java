@@ -10,6 +10,7 @@ import com.test.mysql.repository.ElectronicDataForReportRepository;
 import com.test.mysql.repository.UserRepository;
 import com.test.web.Utils.DateUtil;
 import com.test.web.config.CustomSecurityMetadataSource;
+import com.test.web.service.security.RoleManager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -29,6 +30,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -61,55 +63,14 @@ public class ReportController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleManager roleManager;
+
     @RequestMapping("/index")
     public String index(ModelMap model, Principal principal) throws Exception {
-        Authentication authentication = (Authentication) principal;
-        List<String> userroles = new ArrayList<String>();
-        for (GrantedAuthority ga : authentication.getAuthorities()) {
-            userroles.add(ga.getAuthority());
-        }
-
-        boolean newrole = false, editrole = false, deleterole = false;
-        for (String key : CustomSecurityMetadataSource.resourceMap.keySet()) {
-            if (key.contains("new")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        newrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("edit")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        editrole = true;
-                        break;
-                    }
-                }
-
-            }
-            if (key.contains("delete")) {
-                for (ConfigAttribute ca : CustomSecurityMetadataSource.resourceMap.get(key)) {
-                    if (userroles.contains(ca.getAttribute())) {
-                        deleterole = true;
-                        break;
-                    }
-                }
-
-            }
-        }
-
-        out.print("new role is" + newrole + "editrole is " + editrole + "deleterole is " + deleterole);
-        List<Department> departments = departmentRepository.findAll();
-        model.addAttribute("departments", departments);
-        model.addAttribute("newrole", newrole);
-        model.addAttribute("editrole", editrole);
-        model.addAttribute("deleterole", deleterole);
-        User user = userRepository.findByName(principal.getName());
-        model.addAttribute("user", user);
+        Model newModle = roleManager.giveAuthority((Model) model, principal);
         List<String> category = electronicDataForReportRepository.findCategory();
-        model.addAttribute("category", category);
+        newModle.addAttribute("category", category);
         return "report/index";
     }
 
