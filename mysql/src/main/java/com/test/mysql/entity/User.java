@@ -21,11 +21,11 @@ public class User implements java.io.Serializable{
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "did")
+    @JoinColumn(name = "did",referencedColumnName="department_id")
     @JsonBackReference
     private Department department;
 
-    @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "roles_id")})

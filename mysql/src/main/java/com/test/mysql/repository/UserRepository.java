@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select t from User t where t.name =?1 and t.email =?2")
     User findByNameAndEmail(String name, String email);
 
-    @Query("select t from User t where t.name like :name")
+    @Query("select u from User u where u.name like CONCAT('%',:name,'%')")
     Page<User> findByName(@Param("name") String name, Pageable pageRequest);
 
     User findByName(String name);

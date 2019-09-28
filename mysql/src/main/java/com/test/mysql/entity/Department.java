@@ -14,6 +14,8 @@ public class Department implements java.io.Serializable{
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdate;
+    @Column(name = "department_id")
+    private String departmentId;
 
     public Department() {
     }
