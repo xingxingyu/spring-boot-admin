@@ -50,7 +50,7 @@ public class MDBManager {
         try {
             return cpds.getConnection();
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("连接数据库报错",e);
         }
         return null;
     }

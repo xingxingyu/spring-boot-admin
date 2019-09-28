@@ -21,7 +21,6 @@ public class CheckStatThread implements Runnable {
         DeviceDao deviceDao = new DeviceDaoImpl();
         while (true) {
             try {
-                logger.info("------------开始检查设备状态-----------");
                 Map<Long, String> ipList = deviceDao.getIpList();
                 if (ipList != null) {
                     for (Long id : ipList.keySet()) {
@@ -34,7 +33,7 @@ public class CheckStatThread implements Runnable {
                 }
                 Thread.sleep(10000);
             } catch (Exception e) {
-             logger.error(e.getMessage());
+             logger.error("启动错误",e);
             }
         }
 

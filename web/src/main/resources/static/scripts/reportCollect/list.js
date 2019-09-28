@@ -85,8 +85,8 @@ function fillData(data) {
         html += '<tr> ' +
             '<td>' + (v.department == null ? '' : v.department) + '</td>' +
             '<td>' + (v.categoryName == null ? '' : v.categoryName) + '</td>' +
-            '<td>' + (v.netWeight == null ? '' : v.netWeight) + '</td>' +
-            '<td>' + (v.mweight == null ? '' : v.mweight) + '</td>' +
+            '<td>' + (v.netWeight == null ? '0' : v.netWeight.toFixed(2)) + '</td>' +
+            '<td>' + (v.mweight == null ? '0' : v.mweight.toFixed(2) ) + '</td>' +
             '<td>' + (v.transitp == null ? '' : v.transitp) + '</td>' +
             '<td>' + (v.transitpt == null ? '' : getSmpFormatDateByLong(v.transitpt, true)) + '</td>';
         $list.append($(html));
