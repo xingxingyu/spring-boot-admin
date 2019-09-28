@@ -1,18 +1,9 @@
 package com.test.mysql.model;
 
 
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.Data;
 
-import java.util.Date;
-
+@Data
 public class ResourceQo extends PageQo {
     private String resourceName;
-
-    public String getResourceName() {
-        return resourceName;
-    }
-
-    public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
-    }
 }

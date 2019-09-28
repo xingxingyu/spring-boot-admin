@@ -1,70 +1,22 @@
 package com.test.mysql.model;
 
 
+import lombok.Data;
 
-
+@Data
 public class DeviceQo extends PageQo {
-	
-	 private long id;
-	    
-	    private String num;
-	    
-	    private String departments;
 
-	    private String ip;
-	    
-	    private String port;
-	    
-	    private String examine;
+    private long id;
 
-		public long getId() {
-			return id;
-		}
+    private String num;
 
-		public void setId(long id) {
-			this.id = id;
-		}
+    private String departments;
 
-		public String getDepartments() {
-			return departments;
-		}
+    private String ip;
 
-		public void setDepartments(String departments) {
-			this.departments = departments;
-		}
+    private String port;
 
-		public String getIp() {
-			return ip;
-		}
+    private String examine;
 
-		public void setIp(String ip) {
-			this.ip = ip;
-		}
 
-		public String getPort() {
-			return port;
-		}
-
-		public void setPort(String port) {
-			this.port = port;
-		}
-
-		public String getExamine() {
-			return examine;
-		}
-
-		public void setExamine(String examine) {
-			this.examine = examine;
-		}
-
-		public String getNum() {
-			return num;
-		}
-
-		public void setNum(String num) {
-			this.num = num;
-		}
-	    
-	    
-	
 }
