@@ -17,17 +17,22 @@
     <script th:src="@{/scripts/jquery.smartselect-1.1.min.js}"></script>
     <script th:src="@{/scripts/artDialog/artDialog.js}"/>
     <script th:src="@{/scripts/My97DatePicker/WdatePicker.js}"></script>
-    <script th:src="@{/scripts/reportCollect/list.js}" charset="GB2312"></script>
+    <script th:src="@{/scripts/reportMonth/list.js}" charset="GB2312"></script>
 
 <style>
     label{font-weight: 100}
     h4, h5, h6, h4, h5, h6 {margin-top: 0px;margin-bottom: 0px;}
 </style>
 
+    <script language="JavaScript">
+        var today=new Date();
+        var submitTime=today.getFullYear()+(today.getMonth()+1)+today.getDate();
+        $("#month").attr('value',submitTime);
+    </script>
 </head>
 <body>
 <div class="locationLine" layout:fragment="prompt">
-    当前位置：首页 &gt; <em>汇总数据</em>
+    当前位置：首页 &gt; <em>月度汇总</em>
 </div>
 <div class="statisticBox w-782" layout:fragment="content">
     <form id="queryForm" method="get">
@@ -39,14 +44,8 @@
                 <div class="dataSearchBox forUserRadius">
                     <ul>
                         <li>
-                            <label class="preInpTxt f-left">开始</label>
-                            <input type="text" class="inp-list f-left w-200" value="" id="start" name="start"
-                                   />
-                        </li>
-
-                        <li>
-                            <label class="preInpTxt f-left">结束</label>
-                            <input type="text" class="inp-list f-left w-200" value="" id="end" name="end"/>
+                            <label class="preInpTxt f-left">月份</label>
+                            <input type="text" class="inp-list f-left w-200" value="201907" id="month" name="month"/>
                         </li>
 
                         <li>
@@ -55,9 +54,7 @@
                         <li>
                             <a href="javascript:void(0)" class="blueBtn-62X30 f-right" id="exportExcel">导出</a>
                         </li>
-                        <li>
-                            <a href="javascript:void(0)" class="blueBtn-62X30 f-right" id="view">视图</a>
-                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -68,12 +65,9 @@
         <table class="dataListTab">
             <thead><!--页眉-->
             <tr>
-                <th>科室</th>
+                <th>月份</th>
                 <th>垃圾类型</th>
-                <th>重量</th>
-                <th>修改重量</th>
-                <th>装车人</th>
-                <th>装车时间</th>
+                <th>净重</th>
             </tr>
             </thead>
             <tbody id="tbodyContent">

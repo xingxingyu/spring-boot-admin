@@ -2,9 +2,11 @@ package com.test.web.controller;
 
 
 import com.test.mysql.entity.MonthStatisc;
+import com.test.mysql.model.PageQo;
 import com.test.web.service.ReoportService;
 import com.test.web.service.security.RoleManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,15 +37,22 @@ public class MonthCollectController {
     }
 
 
-    @RequestMapping(value = "/list/month/{sdate}")
+    @RequestMapping(value = "/list/{sdate}")
     @ResponseBody
-    public List<MonthStatisc> listReport(@PathVariable String sdate) {
+    public Page<MonthStatisc> listReport(@PathVariable String sdate, PageQo page) {
         List<MonthStatisc> monthStatiscs = reoportService.listReport2(sdate);
-        return monthStatiscs;
+        Pageable pageable = new PageRequest(page.getPage(), page.getSize(), new Sort(Sort.Direction.ASC, "sdate"));
+
+        int start = pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > monthStatiscs.size() ? monthStatiscs.size():( start + pageable.getPageSize());
+
+        PageImpl<MonthStatisc> monthStatiscs1 = new PageImpl(monthStatiscs.subList(start,end),pageable,monthStatiscs.size());
+
+        return monthStatiscs1;
 
     }
 
-    @RequestMapping(value = "/down/month/{sdate}")
+    @RequestMapping(value = "/down/{sdate}")
     @ResponseBody
     public ResponseEntity<byte[]> downReport(@PathVariable String sdate) throws UnsupportedEncodingException {
         byte[] bytes = reoportService.downloadReport2(sdate);
