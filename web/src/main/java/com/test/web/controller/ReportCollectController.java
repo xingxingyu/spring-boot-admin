@@ -378,16 +378,16 @@ public class ReportCollectController {
     }
 
     //通过科室和垃圾类型查询净重
-    private Double getBydeptAndGarbageType(List<GarbageCollect> f, String dept, String type) {
+    private double getBydeptAndGarbageType(List<GarbageCollect> f, String dept, String type) {
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#.##");
         GarbageCollect fc;
         Iterator<GarbageCollect> it = f.iterator();
         //dept传值没有错
         while (it.hasNext()) {
             fc = it.next();
-            if (StringUtils.isEmpty(fc.getDepartment()) && StringUtils.isEmpty(dept.trim())
-                    && fc.getDepartment().trim().equals(dept.trim())
-                    && fc.getCategoryName().trim().equals(type.trim())) {
-                return fc.getNetWeight();
+            if (dept.equals(fc.getDepartment())
+                    && type.equals(fc.getCategoryName())) {
+                return Double.valueOf(df.format(fc.getNetWeight()));
             }
 
         }
@@ -489,7 +489,6 @@ public class ReportCollectController {
         return map;
 
     }
-
 
 
 }
