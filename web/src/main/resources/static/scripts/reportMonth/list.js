@@ -16,12 +16,18 @@ $(function () {
     });
     $("#month").datetimepicker(
         {
-            format: 'yyyymm',
+            bootcssVer: 3,
             weekStart: 1,
-            autoclose: true,
-            startView: 3,
+            todayBtn: 1,
+            initialDate: new Date(),
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 4,
+            endView: 3,
             minView: 3,
-            forceParse: false,
+            forceParse: 0,
+            showMeridian: 1,
+            format: "yyyymm",
             language: 'zh-CN'
         });
 });
