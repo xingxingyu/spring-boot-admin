@@ -19,7 +19,6 @@ $(function () {
             bootcssVer: 3,
             weekStart: 1,
             todayBtn: 1,
-            initialDate: new Date(),
             autoclose: 1,
             todayHighlight: 1,
             startView: 4,
@@ -27,8 +26,10 @@ $(function () {
             minView: 3,
             forceParse: 0,
             showMeridian: 1,
+            formatDate: "yyyymm",
             format: "yyyymm",
-            language: 'zh-CN'
+            language: 'zh-CN',
+            defaultDate: new Date()
         });
 });
 

@@ -42,4 +42,9 @@ public class Authority implements java.io.Serializable{
         this.resources = resources;
     }
 
+    public Authority() {
+
+    }
+
+
 }

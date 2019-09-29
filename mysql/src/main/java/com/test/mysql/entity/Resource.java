@@ -37,5 +37,6 @@ public class Resource implements java.io.Serializable{
     public Resource(String resourceName) {
         this.resourceName = resourceName;
     }
+    public Resource() { }
 
 }

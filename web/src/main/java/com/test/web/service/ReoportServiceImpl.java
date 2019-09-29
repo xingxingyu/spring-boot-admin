@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ReoportServiceImpl implements ReoportService {
@@ -68,7 +65,7 @@ public class ReoportServiceImpl implements ReoportService {
             i++;
         }
 
-        for (i = 1; i <= 31; i++) {
+        for (i = 1; i <= getDaysOfMonth(Integer.valueOf(yearstr), monthstr); i++) {
             row = sheet1.createRow(i + 2);
             row.createCell(0).setCellValue(i);
             for (int j = 1; j < 7; j++) {
@@ -176,6 +173,16 @@ public class ReoportServiceImpl implements ReoportService {
             sum += monthStatisc.getNetWeight();
         }
         return sum;
+    }
+
+
+    public int getDaysOfMonth(int yearStr, String month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, yearStr);
+        calendar.set(Calendar.MONTH, Integer.valueOf(month) - 1);
+        calendar.set(Calendar.DATE, 1);
+        calendar.roll(Calendar.DATE, -1);
+        return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
 }

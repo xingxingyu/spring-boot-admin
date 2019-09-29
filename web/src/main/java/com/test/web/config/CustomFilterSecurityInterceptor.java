@@ -34,7 +34,7 @@ public class CustomFilterSecurityInterceptor extends AbstractSecurityInterceptor
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e);
         } finally {
             super.afterInvocation(token, null);
         }
