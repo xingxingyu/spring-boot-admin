@@ -315,7 +315,6 @@ public class ReportCollectController {
         }
 
         //运输人员
-        //todo
         for (int i = 0; i <= 6 + garbageType.length; i += (garbageType.length + 6)) {
             for (int j = 1; j <= leftResordes; j++) {
                 row = sheet1.getRow(4 + j) == null ? sheet1.createRow(4 + j) : sheet1.getRow(4 + j);
@@ -341,10 +340,12 @@ public class ReportCollectController {
                     value = row.getCell(0) != null ? nurseMap.get(row.getCell(0).getStringCellValue()) : null;
 
                 } else {
-                    value = row.getCell(5 + garbageType.length) != null ? deptOperaMap.get(row.getCell(5 + garbageType.length).getStringCellValue()) : null;
+                    value = row.getCell(6 + garbageType.length) != null ? nurseMap.get(row.getCell(6 + garbageType.length).getStringCellValue()) : null;
                 }
                 cell.setCellValue(value == null ? "" : value);
-
+                if(value==null||value.equals("")){
+                    sheet1.getRow(4+j).getCell(garbageType.length + 1+i).setCellValue("");
+                }
             }
         }
         //废物去向说明
