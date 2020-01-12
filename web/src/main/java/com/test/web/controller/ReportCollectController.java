@@ -46,7 +46,7 @@ import java.util.*;
 @RequestMapping("/reportCollect")
 public class ReportCollectController {
     private static Logger logger = LoggerFactory.getLogger(ReportCollectController.class);
-    private SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     @Autowired
     private ReportCollectRepository reportCollectRepository;
@@ -69,6 +69,7 @@ public class ReportCollectController {
     public Page<GarbageCollect> listReport(GabageDetailQo gabageDetailQo) {
         Pageable pageable = new PageRequest(gabageDetailQo.getPage(), gabageDetailQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
         Date start = DateUtil.getTime(-1, 0, 0, 0);
+        SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date end = DateUtil.getTime(0, 0, 0, 0);
         Page<GarbageCollect> list = null;
         try {
@@ -103,6 +104,7 @@ public class ReportCollectController {
 
     public List<GarbageCollect> getAllList(GabageDetailQo gabageDetailQo) {
         Pageable pageable = new PageRequest(gabageDetailQo.getPage(), gabageDetailQo.getSize(), new Sort(Sort.Direction.ASC, "id"));
+        SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<GarbageCollect> list = new ArrayList<GarbageCollect>();
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
@@ -172,6 +174,7 @@ public class ReportCollectController {
     @ResponseBody
     public ResponseEntity<byte[]> downloadFile(HttpServletRequest request,
                                                HttpServletResponse response) throws Exception {
+        SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         GabageDetailQo gabageDetailQo = new GabageDetailQo();
         gabageDetailQo.setStart(request.getParameter("start"));
         gabageDetailQo.setEnd(request.getParameter("end"));
@@ -185,9 +188,12 @@ public class ReportCollectController {
         Map<String, String> transMap = buildDepart2TransMap(gabageDetailQo);
         //构建部门和护士map
         Map<String, String> nurseMap = buildDepart2NurseMap(gabageDetailQo);
+        //构建部门护士交接时间map
+        Map<String, String> nurseTimeMap = buildDpart2Mtime(gabageDetailQo);
+
 
         //获取垃圾类型
-        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "其他废物"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶","未被污染的输液袋或瓶","胚胎","胚胎数量"};
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废物院内交接登记表";
@@ -293,7 +299,14 @@ public class ReportCollectController {
             for (int j = 1; j <= leftResordes; j++) {
                 row = sheet1.getRow(4 + j) == null ? sheet1.createRow(4 + j) : sheet1.getRow(4 + j);
                 cell = row.createCell(i + garbageType.length + 1);
-                cell.setCellValue(now);
+                String value = null;
+                if (i == 0) {
+                    value = row.getCell(0) != null ? nurseTimeMap.get(row.getCell(0).getStringCellValue()) : null;
+
+                } else {
+                    value = row.getCell(6 + garbageType.length) != null ? nurseTimeMap.get(row.getCell(6 + garbageType.length).getStringCellValue()) : null;
+                }
+                cell.setCellValue(value == null ? "" : value);
             }
         }
 
@@ -343,8 +356,8 @@ public class ReportCollectController {
                     value = row.getCell(6 + garbageType.length) != null ? nurseMap.get(row.getCell(6 + garbageType.length).getStringCellValue()) : null;
                 }
                 cell.setCellValue(value == null ? "" : value);
-                if(value==null||value.equals("")){
-                    sheet1.getRow(4+j).getCell(garbageType.length + 1+i).setCellValue("");
+                if (value == null || value.equals("")) {
+                    sheet1.getRow(4 + j).getCell(garbageType.length + 1 + i).setCellValue("");
                 }
             }
         }
@@ -397,7 +410,7 @@ public class ReportCollectController {
 
     public Map<String, String> buildDepart2OperatorMap(
             GabageDetailQo gabageDetailQo) throws ParseException {
-
+        SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
         if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
@@ -423,7 +436,7 @@ public class ReportCollectController {
 
     public Map<String, String> buildDepart2NurseMap(
             GabageDetailQo gabageDetailQo) throws ParseException {
-
+        SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
         if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
@@ -449,7 +462,7 @@ public class ReportCollectController {
 
     public Map<String, String> buildDepart2TransMap(
             GabageDetailQo gabageDetailQo) throws ParseException {
-
+        SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date start = DateUtil.getTime(-1, 0, 0, 0);
         Date end = DateUtil.getTime(0, 0, 0, 0);
         if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
@@ -473,6 +486,29 @@ public class ReportCollectController {
 
     }
 
+    public Map<String, String> buildDpart2Mtime(GabageDetailQo gabageDetailQo) throws ParseException {
+        SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start = DateUtil.getTime(-1, 0, 0, 0);
+        Date end = DateUtil.getTime(0, 0, 0, 0);
+        if (gabageDetailQo.getStart() == null || gabageDetailQo.getStart() == "") {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, -30);
+            start = cal.getTime();
+        } else {
+            start = formatFull.parse(gabageDetailQo.getStart() + ":00");
+        }
+
+        if (gabageDetailQo.getEnd() == null || gabageDetailQo.getEnd() == "") {
+            end = new Date();
+        } else {
+            end = formatFull.parse(gabageDetailQo.getEnd() + ":59");
+        }
+        List<Object[]> list = reportRepository.findDepartmentAndTime(start, end);
+        Map<String, String> map = buildTimeMap(list);
+        return map;
+    }
+
     public Map<String, String> buildMap(List<Object[]> list) {
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < list.size(); i++) {
@@ -489,6 +525,22 @@ public class ReportCollectController {
         }
         return map;
 
+    }
+
+    public Map<String, String> buildTimeMap(List<Object[]> list) {
+        if (list != null) {
+            SimpleDateFormat formatFull = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Map<String, String> map = new HashMap<>();
+            for (int i = 0; i < list.size(); i++) {
+                Object[] m = list.get(i);
+                String key = m[0] + "";
+                String value = m[1] != null ? formatFull.format(m[1]) : "";
+                map.put(key, value);
+
+            }
+            return map;
+        }
+        return Collections.emptyMap();
     }
 
 

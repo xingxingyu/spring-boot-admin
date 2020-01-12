@@ -39,5 +39,8 @@ public interface GarbageDetailRepository extends JpaRepository<Garbage, Long> {
     @Query(value = "select distinct e.department,nullif(e.transName,'') from f_garbage e where e.up_Date BETWEEN :start and :end group by department", nativeQuery = false)
     List<Object[]> findDistinctTrans(@Param("start") Date start, @Param("end") Date end);
 
+    @Query(value = "select  e.department,max(e.mtime1) as mtime1 from f_garbage e where e.up_Date BETWEEN :start and :end group by department", nativeQuery = false)
+    List<Object[]> findDepartmentAndTime(@Param("start") Date start, @Param("end") Date end);
+
 
 }

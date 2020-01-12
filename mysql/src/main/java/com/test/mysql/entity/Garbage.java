@@ -56,6 +56,10 @@ public class Garbage implements java.io.Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date transitpt;
     private Double mweight;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "m_time1")
+    private Date mtime1;  // 护士操作时间
+
 
     public Garbage() {
     }
