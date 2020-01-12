@@ -24,6 +24,7 @@ public class GarbageCollect implements java.io.Serializable {
     private String transitp; //装车人
     private Date transitpt;  //装车时间
     private Double mweight;
+    private Long peitaiNum;
 
     @Override
     public boolean equals(Object o) {
@@ -48,6 +49,17 @@ public class GarbageCollect implements java.io.Serializable {
 
 
     public GarbageCollect(String categoryId, String categoryName, String department, Double netWeight, Double mweight,
+                          String transitp, Date transitpt,Long peitaiNum) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.netWeight = netWeight;
+        this.department = department;
+        this.transitp = transitp;
+        this.transitpt = transitpt;
+        this.mweight = mweight;
+        this.peitaiNum = peitaiNum;
+    }
+    public GarbageCollect(String categoryId, String categoryName, String department, Double netWeight, Double mweight,
                           String transitp, Date transitpt) {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
@@ -57,7 +69,6 @@ public class GarbageCollect implements java.io.Serializable {
         this.transitpt = transitpt;
         this.mweight = mweight;
     }
-
     public GarbageCollect() {
     }
 }

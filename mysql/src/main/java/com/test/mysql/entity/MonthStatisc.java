@@ -14,6 +14,7 @@ public class MonthStatisc {
     private String sdate;
     private String categoryName; // 物料名称
     private Double netWeight;
+    private Long peitaiNum;
 
     public MonthStatisc() {
         this.id = id;

@@ -193,7 +193,7 @@ public class ReportCollectController {
 
 
         //获取垃圾类型
-        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶", "未被污染的输液袋或瓶", "胚胎"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶", "未被污染的输液袋或瓶", "胚胎", "胚胎数量"};
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废物院内交接登记表";
@@ -272,6 +272,9 @@ public class ReportCollectController {
                 if (j <= 0) {
                     //第一列为部门
                     cell.setCellValue(departments.get(i - 5).getName());
+                } else if (j == garbageType.length) {
+                    //如果垃圾类型为胚胎，获取胚胎的数量
+                    cell.setCellValue(this.getEmbryo(netWeightList, departments.get(i - 5).getName()));
                 } else {
                     //其它列为净重
                     cell.setCellValue(this.getBydeptAndGarbageType(netWeightList, departments.get(i - 5).getName(), garbageType[j - 1].toString()));
@@ -287,6 +290,9 @@ public class ReportCollectController {
                 if (j <= 0) {
                     //第一列为部门
                     cell.setCellValue(departments.get(i - 5).getName());
+                } else if (j == garbageType.length) {
+                    //如果垃圾类型为胚胎，获取胚胎的数量
+                    cell.setCellValue(this.getEmbryo(netWeightList, departments.get(i - 5).getName()));
                 } else {
                     //其它列为净重
                     cell.setCellValue(this.getBydeptAndGarbageType(netWeightList, departments.get(i - 5).getName(), garbageType[j - 1].toString()));
@@ -406,6 +412,22 @@ public class ReportCollectController {
 
         }
         return 0.0;
+    }
+
+    //如果垃圾类型为胚胎，获取胚胎的数量
+    private int getEmbryo(List<GarbageCollect> f, String dept) {
+        GarbageCollect fc;
+        Iterator<GarbageCollect> it = f.iterator();
+        //dept传值没有错
+        int sum = 0;
+        while (it.hasNext()) {
+            fc = it.next();
+            if (dept.equals(fc.getDepartment())) {
+                sum = sum + (fc.getPeitaiNum() == null ? 0 : fc.getPeitaiNum().intValue());
+            }
+
+        }
+        return sum;
     }
 
     public Map<String, String> buildDepart2OperatorMap(

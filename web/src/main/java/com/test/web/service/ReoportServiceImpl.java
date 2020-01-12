@@ -40,7 +40,7 @@ public class ReoportServiceImpl implements ReoportService {
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废弃物月度报表";
         //获取垃圾类型
-        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶","未被污染的输液袋或瓶","胚胎"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶","未被污染的输液袋或瓶","胚胎","胚胎数量"};
         //单元格样式
         HSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -69,18 +69,22 @@ public class ReoportServiceImpl implements ReoportService {
             row = sheet1.createRow(i + 2);
             row.createCell(0).setCellValue(i);
             for (int j = 1; j < garbageType.length + 1; j++) {
-                row.createCell(j).setCellValue(findVale(garbageType[j - 1], i, monthStatiscs));
+                if (j == garbageType.length + 1) {
+                    row.createCell(j).setCellValue(findPeitaiNum( i, monthStatiscs));
+                } else {
+                    row.createCell(j).setCellValue(findVale(garbageType[j - 1], i, monthStatiscs));
+                }
             }
-
-
         }
+
+
         //合计
         row = sheet1.createRow(34);
         row.createCell(0).setCellValue("合计");
         for (int j = 1; j < garbageType.length + 1; j++) {
             row.createCell(j).setCellValue(sumCatogory(garbageType[j - 1], monthStatiscs));
         }
-        row.createCell(garbageType.length + 1).setCellValue(sum(monthStatiscs));
+        //row.createCell(garbageType.length + 1).setCellValue(sum(monthStatiscs));
 
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -136,6 +140,23 @@ public class ReoportServiceImpl implements ReoportService {
         return 0.00;
     }
 
+    int findPeitaiNum(int dayIndex, List<MonthStatisc> monthStatiscList) {
+        String month = null;
+        if (dayIndex < 10) {
+            month = "0" + dayIndex;
+        } else {
+            month = dayIndex + "";
+        }
+        int sum = 0;
+
+        for (MonthStatisc monthStatisc : monthStatiscList) {
+            if (monthStatisc.getSdate() != null && monthStatisc.getSdate().endsWith(month)) {
+                sum = sum + (monthStatisc.getPeitaiNum() == null ? 0 : monthStatisc.getPeitaiNum().intValue());
+            }
+        }
+        return sum;
+    }
+
 
     List<MonthStatisc> deserialization(List<Object[]> strings) {
 
@@ -149,6 +170,7 @@ public class ReoportServiceImpl implements ReoportService {
             monthStatisc.setSdate(String.valueOf(array[0]));
             monthStatisc.setCategoryName(String.valueOf(array[1]));
             monthStatisc.setNetWeight(Double.valueOf(array[2].toString()));
+            monthStatisc.setPeitaiNum((Long) array[3]);
             monthStatiscs.add(monthStatisc);
         }
         return monthStatiscs;

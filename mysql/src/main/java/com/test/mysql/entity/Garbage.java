@@ -59,6 +59,8 @@ public class Garbage implements java.io.Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "m_time1")
     private Date mtime1;  // 护士操作时间
+    @Column(name = "peitai_num") //胚胎数量
+    private Integer peitaiNum;
 
 
     public Garbage() {

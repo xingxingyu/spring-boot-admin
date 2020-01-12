@@ -24,7 +24,7 @@ public interface ReportCollectRepository extends JpaRepository<GarbageCollect, L
         "where e.up_Date >= :start and e.up_Date <= :end group by e.department,e.categoryId,e.categoryName ORDER BY e.department,e.categoryId asc ")
     Page<GarbageCollect> findByTime(@Param("start") Date start, @Param("end") Date end, Pageable pageRequest);
 
-    @Query(value = "select NEW com.test.mysql.entity.GarbageCollect(e.categoryId ,e.categoryName,e.department ,sum(e.netWeight),sum(mweight),max(transitp),max(transitpt)) from f_garbage e " +
+    @Query(value = "select NEW com.test.mysql.entity.GarbageCollect(e.categoryId ,e.categoryName,e.department ,sum(e.netWeight),sum(mweight),max(transitp),max(transitpt),sum(peitaiNum))  from f_garbage e " +
         "where e.up_Date >= :start and e.up_Date <= :end group by e.department,e.categoryId,e.categoryName ORDER BY e.department,e.categoryId asc ")
     List<GarbageCollect> findAll(@Param("start") Date start, @Param("end") Date end);
 }
