@@ -193,7 +193,7 @@ public class ReportCollectController {
 
 
         //获取垃圾类型
-        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "其他废物"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶", "未被污染的输液袋或瓶", "胚胎"};
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废物院内交接登记表";

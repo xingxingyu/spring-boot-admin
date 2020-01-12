@@ -40,7 +40,7 @@ public class ReoportServiceImpl implements ReoportService {
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废弃物月度报表";
         //获取垃圾类型
-        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "其他废物"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶","未被污染的输液袋或瓶","胚胎"};
         //单元格样式
         HSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -68,7 +68,7 @@ public class ReoportServiceImpl implements ReoportService {
         for (i = 1; i <= getDaysOfMonth(Integer.valueOf(yearstr), monthstr); i++) {
             row = sheet1.createRow(i + 2);
             row.createCell(0).setCellValue(i);
-            for (int j = 1; j < 7; j++) {
+            for (int j = 1; j < garbageType.length + 1; j++) {
                 row.createCell(j).setCellValue(findVale(garbageType[j - 1], i, monthStatiscs));
             }
 
@@ -77,10 +77,10 @@ public class ReoportServiceImpl implements ReoportService {
         //合计
         row = sheet1.createRow(34);
         row.createCell(0).setCellValue("合计");
-        for (int j = 1; j < 7; j++) {
+        for (int j = 1; j < garbageType.length + 1; j++) {
             row.createCell(j).setCellValue(sumCatogory(garbageType[j - 1], monthStatiscs));
         }
-        row.createCell(7).setCellValue(sum(monthStatiscs));
+        row.createCell(garbageType.length + 1).setCellValue(sum(monthStatiscs));
 
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
