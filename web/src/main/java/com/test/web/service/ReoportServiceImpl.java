@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -40,7 +41,7 @@ public class ReoportServiceImpl implements ReoportService {
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废弃物月度报表";
         //获取垃圾类型
-        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶","未被污染的输液袋或瓶","胚胎","胚胎数量"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶","未被污染的输液袋或瓶","胎盘","胎盘数量"};
         //单元格样式
         HSSFCellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -69,7 +70,7 @@ public class ReoportServiceImpl implements ReoportService {
             row = sheet1.createRow(i + 2);
             row.createCell(0).setCellValue(i);
             for (int j = 1; j < garbageType.length + 1; j++) {
-                if (j == garbageType.length + 1) {
+                if (j == garbageType.length) {
                     row.createCell(j).setCellValue(findPeitaiNum( i, monthStatiscs));
                 } else {
                     row.createCell(j).setCellValue(findVale(garbageType[j - 1], i, monthStatiscs));
@@ -81,10 +82,10 @@ public class ReoportServiceImpl implements ReoportService {
         //合计
         row = sheet1.createRow(34);
         row.createCell(0).setCellValue("合计");
-        for (int j = 1; j < garbageType.length + 1; j++) {
+        for (int j = 1; j < garbageType.length; j++) {
             row.createCell(j).setCellValue(sumCatogory(garbageType[j - 1], monthStatiscs));
         }
-        //row.createCell(garbageType.length + 1).setCellValue(sum(monthStatiscs));
+        row.createCell(garbageType.length).setCellValue(sum(monthStatiscs));
 
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -170,7 +171,7 @@ public class ReoportServiceImpl implements ReoportService {
             monthStatisc.setSdate(String.valueOf(array[0]));
             monthStatisc.setCategoryName(String.valueOf(array[1]));
             monthStatisc.setNetWeight(Double.valueOf(array[2].toString()));
-            monthStatisc.setPeitaiNum((Long) array[3]);
+            monthStatisc.setPeitaiNum(array[3] != null ? ((BigDecimal) array[3]).longValue() : 0);
             monthStatiscs.add(monthStatisc);
         }
         return monthStatiscs;
@@ -181,8 +182,7 @@ public class ReoportServiceImpl implements ReoportService {
 
         for (MonthStatisc monthStatisc : monthStatiscList) {
             if (
-                    categoryName.equals(monthStatisc.getCategoryName())
-            ) {
+                    categoryName.equals(monthStatisc.getCategoryName())) {
                 sum += monthStatisc.getNetWeight();
             }
         }
@@ -192,7 +192,7 @@ public class ReoportServiceImpl implements ReoportService {
     double sum(List<MonthStatisc> monthStatiscList) {
         double sum = 0.0;
         for (MonthStatisc monthStatisc : monthStatiscList) {
-            sum += monthStatisc.getNetWeight();
+            sum += monthStatisc.getPeitaiNum();
         }
         return sum;
     }

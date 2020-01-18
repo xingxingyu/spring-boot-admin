@@ -13,6 +13,7 @@ import java.text.ParseException;
 
 import com.test.web.service.security.RoleManager;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,6 +183,11 @@ public class ReportCollectController {
         List<GarbageCollect> netWeightList = this.getAllList(gabageDetailQo);
         //获取部门列表
         List<Department> departments = departmentRepository.findAll();
+        //获取部门名称列表
+        List<String> depNames = new ArrayList<>();
+        for (Department department : departments) {
+            depNames.add(department.getName());
+        }
         //构建部门和操作员map
         Map<String, String> deptOperaMap = buildDepart2OperatorMap(gabageDetailQo);
         //构建运输人员map
@@ -193,7 +199,7 @@ public class ReportCollectController {
 
 
         //获取垃圾类型
-        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶", "未被污染的输液袋或瓶", "胚胎", "胚胎数量"};
+        String[] garbageType = new String[]{"感染性废物", "病理性废物", "损伤性废物", "药物性废物", "化学性废物", "未被污染的玻璃瓶", "未被污染的输液袋或瓶", "胎盘", "胎盘数量"};
         //创建workbook
         HSSFWorkbook workbook = new HSSFWorkbook();
         String sheetName = "医疗废物院内交接登记表";
@@ -377,6 +383,19 @@ public class ReportCollectController {
             cell.setCellValue("无锡市工业医疗安全处置有限公司");
         }
 
+        //合计
+        Row lastRow = sheet1.createRow(Math.max(leftResordes, departments.size() - leftResordes) + 4);
+        lastRow.createCell(0).setCellValue("合计");
+        for (int i = 0; i <= garbageType.length + 6; i = i + garbageType.length + 6) {
+            for (int j = 1; j <= garbageType.length; j++) {
+                if (j != garbageType.length) {
+                    lastRow.createCell(j + i).setCellValue(sumByGarbageType(netWeightList,garbageType[j-1],depNames));
+                } else {
+                    lastRow.createCell(j + i).setCellValue(sumEmbryo(netWeightList,depNames));
+                }
+            }
+        }
+
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             workbook.write(out);
@@ -414,6 +433,21 @@ public class ReportCollectController {
         return 0.0;
     }
 
+    //按照垃圾类型汇总
+    private double sumByGarbageType(List<GarbageCollect> f, String category, List<String> departments) {
+        GarbageCollect fc;
+        Iterator<GarbageCollect> it = f.iterator();
+        //dept传值没有错
+        double sum = 0;
+        while (it.hasNext()) {
+            fc = it.next();
+            if (category.equals(fc.getCategoryName()) && departments.contains(fc.getDepartment())) {
+                sum = sum + (fc.getPeitaiNum() == null ? 0.0 : fc.getNetWeight());
+            }
+        }
+        return sum;
+    }
+
     //如果垃圾类型为胚胎，获取胚胎的数量
     private int getEmbryo(List<GarbageCollect> f, String dept) {
         GarbageCollect fc;
@@ -426,6 +460,21 @@ public class ReportCollectController {
                 sum = sum + (fc.getPeitaiNum() == null ? 0 : fc.getPeitaiNum().intValue());
             }
 
+        }
+        return sum;
+    }
+
+    //如果垃圾类型为胚胎，获取胚胎的数量
+    private int sumEmbryo(List<GarbageCollect> f, List<String> departments) {
+        GarbageCollect fc;
+        Iterator<GarbageCollect> it = f.iterator();
+        //dept传值没有错
+        int sum = 0;
+        while (it.hasNext()) {
+            fc = it.next();
+            if (departments.contains(fc.getDepartment())) {
+                sum = sum + (fc.getPeitaiNum() == null ? 0 : fc.getPeitaiNum().intValue());
+            }
         }
         return sum;
     }
