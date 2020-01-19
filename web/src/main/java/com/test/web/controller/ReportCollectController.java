@@ -442,7 +442,7 @@ public class ReportCollectController {
         while (it.hasNext()) {
             fc = it.next();
             if (category.equals(fc.getCategoryName()) && departments.contains(fc.getDepartment())) {
-                sum = sum + (fc.getPeitaiNum() == null ? 0.0 : fc.getNetWeight());
+                sum = sum + (fc.getNetWeight() == null ? 0.0 : fc.getNetWeight());
             }
         }
         return sum;
